@@ -6,7 +6,8 @@
     <content><![CDATA[<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><blockquote>
 <p>给定数组A，两个下标$ i&lt;=j $, 求出$A[i], A[i + 1], … , A[j]$的最小值。</p>
 </blockquote>
-<h1 id="暴力解法"><a href="#暴力解法" class="headerlink" title="暴力解法"></a>暴力解法</h1><p><img src="1.jpg"></p>
+<h1 id="暴力解法"><a href="#暴力解法" class="headerlink" title="暴力解法"></a>暴力解法</h1><img src="/2020/10/29/rmq/1.jpg" class="" title="This is an image">
+
 <p>asd</p>
 ]]></content>
       <categories>
