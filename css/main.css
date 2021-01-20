@@ -2545,6 +2545,13 @@ mark.search-keyword {
   color: #ff2a2a;
   font-weight: bold;
 }
+mjx-container[jax="CHTML"][display="true"],
+.has-jax {
+  overflow: auto hidden;
+}
+mjx-container[display="true"] + br {
+  display: none;
+}
 .use-motion .animated {
   animation-fill-mode: none;
   visibility: inherit;
@@ -2808,7 +2815,7 @@ hr {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ff3283;
+  background: #ff77f5;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
@@ -2818,6 +2825,7 @@ hr {
   width: 4px;
 }
 .links-of-blogroll-item {
+  display: inline-block;
   padding: 2px 10px;
 }
 .links-of-blogroll-item a,
