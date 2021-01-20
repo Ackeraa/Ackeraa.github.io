@@ -6,7 +6,7 @@
   <link href="http://ackera.github.io/atom.xml" rel="self"/>
   
   <link href="http://ackera.github.io/"/>
-  <updated>2020-10-12T04:05:12.520Z</updated>
+  <updated>2020-10-29T08:49:31.601Z</updated>
   <id>http://ackera.github.io/</id>
   
   <author>
@@ -17,44 +17,30 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello Acker</title>
-    <link href="http://ackera.github.io/2020/10/12/hello-hexo/"/>
-    <id>http://ackera.github.io/2020/10/12/hello-hexo/</id>
-    <published>2020-10-12T02:34:07.000Z</published>
-    <updated>2020-10-12T04:05:12.520Z</updated>
+    <title>RMQ</title>
+    <link href="http://ackera.github.io/2020/10/29/rmq/"/>
+    <id>http://ackera.github.io/2020/10/29/rmq/</id>
+    <published>2020-10-29T08:44:12.000Z</published>
+    <updated>2020-10-29T08:49:31.601Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h3 id=&quot;Today-is-a-f-king-day&quot;&gt;&lt;a href=&quot;#Today-is-a-f-king-day&quot; class=&quot;headerlink&quot; title=&quot;Today is a f**king day!&quot;&gt;&lt;/a&gt;Today is a f**king</summary>
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;给定数组A，两个下标$ i&amp;lt;=j $, 求出$A[i], A[i + 1], … ,</summary>
         
       
     
     
     
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://ackera.github.io/2020/10/12/hello-world/"/>
-    <id>http://ackera.github.io/2020/10/12/hello-world/</id>
-    <published>2020-10-12T02:30:23.072Z</published>
-    <updated>2020-10-12T02:30:23.072Z</updated>
+    <category term="数据结构" scheme="http://ackera.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
-        
-      
+    <category term="数据结构" scheme="http://ackera.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
     
-    
-    
+    <category term="python" scheme="http://ackera.github.io/tags/python/"/>
     
   </entry>
   
