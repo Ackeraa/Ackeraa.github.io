@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Rzange Minimun Queries(Part One)</title>
+    <title>Range Minimun Queries(Part One)</title>
     <url>/2020/10/29/rmq/</url>
     <content><![CDATA[<blockquote>
 <p>本文参考自斯坦福大学数据结构课程 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/00/Slides00.pdf">Range Minimum Queries, Part One</a></p>
