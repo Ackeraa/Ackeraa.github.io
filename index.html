@@ -318,7 +318,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-01-25 00:16:31" itemprop="dateModified" datetime="2021-01-25T00:16:31+08:00">2021-01-25</time>
+        <time title="修改时间：2021-01-25 00:25:43" itemprop="dateModified" datetime="2021-01-25T00:25:43+08:00">2021-01-25</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -343,7 +343,7 @@
           <blockquote>
 <p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/00/Slides00.pdf">Range Minimum Queries, Part One</a></p>
 </blockquote>
-<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p><strong>给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。</strong></p>
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。</p>
 <p>乍一看问题并没有任何难度，直接枚举 $i,j$ 之间的元素，取出最小的即可，时间复杂度为$O(n)$。但假如存在很多组询问呢？</p>
 <p>对于一个长度为 $n$ 的数组，最多存在 $1+2+3+…+n=n(n+1)/2$ 即 $O(n^2)$ 个合法询问，若采用上述解法:</p>
 <ul>
@@ -351,16 +351,14 @@
 <li>每次询问花费的时间：$O(n)$</li>
 <li>总时间复杂度：$O(n^3)$</li>
 </ul>
-<p>下面将讨论一些优化算法，为了方便，记 $RMQ(i, j)$ 为区间 $[i, j]$ 的最小值；记某个 $RMQ$ 算法的时间复杂度为：$<p(n), q(n)="">$ ，其中：</p(n),></p>
+<p>下面将讨论一些优化算法，为了方便，记 $RMQ(i, j)$ 为区间 $[i, j]$ 的最小值；记某个 $RMQ$ 算法的时间复杂度为：$&lt;p(n), q(n)&gt;$ ，其中：</p>
 <ul>
 <li>$p(n)$ 表示预处理的时间复杂度</li>
 <li>$q(n)$ 表示查询的时间复杂度</li>
 </ul>
-<p>那么可将上述枚举算法的时间复杂度则可记为：$<o(1), o(n)="">$。</o(1),></p>
-<h1 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h1><p>可以采用动态规划在 $O(n^2)$ 的时间内预处理出所有的合法询问，之后便可以在 $O(1)$ 时间内查询，其时间复杂度记为：$<o(n^2), o(1)="">$。</o(n^2),></p>
-<p>具体算法为：依次求出长度为 $1, 2,…, n$ 的所有区间的最小值，在求长度为 $k(1&lt;k\le n)$的区间: $[i, j] (j-i+1=k)$ 时，可利用两个长度为 $k-1$ 的区间 $ [i, j-1] $ 和  $[i+1, j]$ 直接比较求出，其状态转移方程为：</p>
-<script type="math/tex; mode=display">
-f[i][j]=min(f[i][j-1],f[i+1][j])</script><p>状态初始化为：$f[i][i]=a<a href="0\le i < n">i</a>$。</p>
+<p>那么可将上述枚举算法的时间复杂度则可记为：$&lt;O(1), O(n)&gt;$。</p>
+<h1 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h1><p>可以采用动态规划在 $O(n^2)$ 的时间内预处理出所有的合法询问，之后便可以在 $O(1)$ 时间内查询，其时间复杂度记为：$&lt;O(n^2), O(1)&gt;$。</p>
+<p>具体算法为：依次求出长度为 $1, 2,…, n$ 的所有区间的最小值，在求长度为 $k(1&lt;k\le n)$的区间: $[i, j] (j-i+1=k)$ 时，可利用两个长度为 $k-1$ 的区间 $ [i, j-1] $ 和  $[i+1, j]$ 直接比较求出，其状态转移方程为：<br>$$<br>f[i][j]=min(f[i][j-1],f[i+1][j])<br>$$<br>状态初始化为：$f[i][i]=a[i](0\le i &lt; n)$。</p>
 <p>则预处理的时间复杂度如下：</p>
 <ul>
 <li>长度个数：$O(n)$</li>
@@ -370,62 +368,58 @@ f[i][j]=min(f[i][j-1],f[i+1][j])</script><p>状态初始化为：$f[i][i]=a<a hr
 </ul>
 <p>预处理完之后，$f[i][j]$ 即为 $RMQ(i, j)$ 的值。</p>
 <p>例如对于如下的数据：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">$i$</th>
-<th style="text-align:center">0</th>
-<th style="text-align:center">1</th>
-<th style="text-align:center">2</th>
-<th style="text-align:center">3</th>
-<th style="text-align:center">4</th>
+<th align="center">$i$</th>
+<th align="center">0</th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+<th align="center">4</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">$A[i]$</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">5</td>
+<tbody><tr>
+<td align="center">$A[i]$</td>
+<td align="center">3</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">1</td>
+<td align="center">5</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p>其求解过程如下图所示：</p>
 <img src="/2020/10/29/rmq/dp_draw.gif" class="">
+
 <p>具体代码如下：</p>
-<pre class=" language-lang-python"><code class="language-lang-python">from math import inf
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> math <span class="token keyword">import</span> inf
 
-class Dp(object):
-    def __init__(self, a):
-        self.n = len(a)
-        self.a = a
-        self.f = [[inf for _ in range(self.n)] for _ in range(self.n)]
+<span class="token keyword">class</span> <span class="token class-name">Dp</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>n <span class="token operator">=</span> len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>a <span class="token operator">=</span> a
+        self<span class="token punctuation">.</span>f <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span>inf <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">]</span>
 
-    def preprocess(self):
-        # Initialize the number in the diagonal.
-        for i in range(self.n):
-            self.f[i][i] = self.a[i]
+    <span class="token keyword">def</span> <span class="token function">preprocess</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># Initialize the number in the diagonal.</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
 
-        # Iterator the diagonals.
-        # l means the index of the diagonal(start from 0).
-        for l in range(1, self.n):
-            for i in range(0, self.n - l):
-                j = i + l
-                self.f[i][j] = min(self.f[i][j - 1], self.f[i + 1][j])
+        <span class="token comment" spellcheck="true"># Iterator the diagonals.</span>
+        <span class="token comment" spellcheck="true"># l means the index of the diagonal(start from 0).</span>
+        <span class="token keyword">for</span> l <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>n <span class="token operator">-</span> l<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                j <span class="token operator">=</span> i <span class="token operator">+</span> l
+                self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> min<span class="token punctuation">(</span>self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-    def rmq(self, i, j):
-        return self.f[i][j]
+    <span class="token keyword">def</span> <span class="token function">rmq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span>
 
-if __name__ == '__main__':
-    a = [3, 2, 4, 1, 5]
-    dp = Dp(a)
-    dp.preprocess()
-    print(dp.rmq(1, 3))
-</code></pre>
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span>
+    dp <span class="token operator">=</span> Dp<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+    dp<span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>dp<span class="token punctuation">.</span>rmq<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 <h1 id="分块"><a href="#分块" class="headerlink" title="分块"></a>分块</h1><p>还可以采用分块的方法，将数组划分为连续的 $O(n/b)$ 个大小为 $b$ 的块，预处理出每一块的最小值，预处理的时间复杂度为：</p>
 <ul>
 <li>块个数：$O(n/b)$</li>
@@ -439,200 +433,193 @@ if __name__ == '__main__':
 <li>在 $i, j$ 之间的块间枚举寻找最小值：$O(n/b)$</li>
 <li>总时间复杂度：$O(n/b+b)$，经求导计算得出 $b=\sqrt n$ 时取得最小值，即：$O(\sqrt n)$</li>
 </ul>
-<p>其时间复杂度记为：$<o(n), o(\sqrt="" n)="">$。</o(n),></p>
+<p>其时间复杂度记为：$&lt;O(n), O(\sqrt n)&gt;$。</p>
 <p>例如对于如下数据：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">$i$</th>
-<th style="text-align:center">0</th>
-<th style="text-align:center">1</th>
-<th style="text-align:center">2</th>
-<th style="text-align:center">3</th>
-<th style="text-align:center">4</th>
-<th style="text-align:center">5</th>
-<th style="text-align:center">6</th>
-<th style="text-align:center">7</th>
-<th style="text-align:center">8</th>
-<th style="text-align:center">9</th>
-<th style="text-align:center">10</th>
-<th style="text-align:center">11</th>
-<th style="text-align:center">12</th>
-<th style="text-align:center">13</th>
+<th align="center">$i$</th>
+<th align="center">0</th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+<th align="center">4</th>
+<th align="center">5</th>
+<th align="center">6</th>
+<th align="center">7</th>
+<th align="center">8</th>
+<th align="center">9</th>
+<th align="center">10</th>
+<th align="center">11</th>
+<th align="center">12</th>
+<th align="center">13</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">$A[i]$</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">5</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">9</td>
-<td style="text-align:center">7</td>
-<td style="text-align:center">6</td>
-<td style="text-align:center">5</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">7</td>
-<td style="text-align:center">4</td>
+<tbody><tr>
+<td align="center">$A[i]$</td>
+<td align="center">3</td>
+<td align="center">5</td>
+<td align="center">4</td>
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">9</td>
+<td align="center">7</td>
+<td align="center">6</td>
+<td align="center">5</td>
+<td align="center">8</td>
+<td align="center">2</td>
+<td align="center">4</td>
+<td align="center">7</td>
+<td align="center">4</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p>其求解 $RMQ(1, 13)$ 过程如下图所示：</p>
 <img src="/2020/10/29/rmq/block_draw.gif" class="">
+
 <p>具体代码如下：</p>
-<pre class=" language-lang-python"><code class="language-lang-python">from math import sqrt, inf
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> math <span class="token keyword">import</span> sqrt<span class="token punctuation">,</span> inf
 
-class Block(object):
-    def __init__(self, a):
-        self.n = len(a)
-        self.len_b = int(sqrt(self.n))
-        self.cnt_b = (self.n - 1) // self.len_b + 1
-        self.a = a
-        self.f = [inf for _ in range(self.cnt_b)] 
+<span class="token keyword">class</span> <span class="token class-name">Block</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>n <span class="token operator">=</span> len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>len_b <span class="token operator">=</span> int<span class="token punctuation">(</span>sqrt<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>cnt_b <span class="token operator">=</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> <span class="token number">1</span>
+        self<span class="token punctuation">.</span>a <span class="token operator">=</span> a
+        self<span class="token punctuation">.</span>f <span class="token operator">=</span> <span class="token punctuation">[</span>inf <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">]</span> 
 
-    def preprocess(self):
-        # Find the minium in every blocks.
-        for i in range(self.cnt_b):
-            for j in range(i * self.len_b, i * self.len_b + self.len_b):
-                # Maybe overflow.
-                if j >= self.n:
-                    break
-                self.f[i] = min(self.f[i], self.a[j])
+    <span class="token keyword">def</span> <span class="token function">preprocess</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># Find the minium in every blocks.</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span>i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">,</span> i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token comment" spellcheck="true"># Maybe overflow.</span>
+                <span class="token keyword">if</span> j <span class="token operator">>=</span> self<span class="token punctuation">.</span>n<span class="token punctuation">:</span>
+                    <span class="token keyword">break</span>
+                self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> min<span class="token punctuation">(</span>self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-    def rmq(self, i, j):
-        ans = inf
+    <span class="token keyword">def</span> <span class="token function">rmq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        ans <span class="token operator">=</span> inf
 
-        # Calculate the index of block containing i/j.
-        ith = i // self.len_b
-        jth = j // self.len_b
-        # iterator within the block to find the minium. 
+        <span class="token comment" spellcheck="true"># Calculate the index of block containing i/j.</span>
+        ith <span class="token operator">=</span> i <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b
+        jth <span class="token operator">=</span> j <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b
+        <span class="token comment" spellcheck="true"># iterator within the block to find the minium. </span>
 
-        if ith == jth:
-            for k in range(i, j + 1):
-                ans = min(ans, self.a[k])
-        else:
-            for k in range(i, ith * self.len_b + self.len_b):
-                ans = min(ans, self.a[k])
-            for k in range(jth * self.len_b, j + 1):
-                ans = min(ans, self.a[k])
-            # Iterator the blocks between i and j to find the minium.
-            for k in range(ith + 1, jth):
-                ans = min(ans, self.f[k])
-        return ans
+        <span class="token keyword">if</span> ith <span class="token operator">==</span> jth<span class="token punctuation">:</span>
+            <span class="token keyword">for</span> k <span class="token keyword">in</span> range<span class="token punctuation">(</span>i<span class="token punctuation">,</span> j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> k <span class="token keyword">in</span> range<span class="token punctuation">(</span>i<span class="token punctuation">,</span> ith <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword">for</span> k <span class="token keyword">in</span> range<span class="token punctuation">(</span>jth <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">,</span> j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token comment" spellcheck="true"># Iterator the blocks between i and j to find the minium.</span>
+            <span class="token keyword">for</span> k <span class="token keyword">in</span> range<span class="token punctuation">(</span>ith <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> jth<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> ans
 
 
-if __name__ == '__main__':
-    a = [3, 5, 4, 1, 2, 9, 7, 6, 5, 8, 2, 4, 7, 4]
-    block = Block(a)
-    block.preprocess()
-    print(block.rmq(1, 13))
-</code></pre>
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span>
+    block <span class="token operator">=</span> Block<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+    block<span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>block<span class="token punctuation">.</span>rmq<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 <h1 id="稀疏表"><a href="#稀疏表" class="headerlink" title="稀疏表"></a>稀疏表</h1><p>对于上文的动态规划算法，对所有 $O(n^2)$ 个区间进行了预处理，可以通过减少预处理的区间个数（在保证依旧可以 $O(1)$ 查询的前提下）来进行优化，具体方法为：对于每一个可能的区间起点 $i(0\le i &lt; n)$ ，求出从 $i$ 开始的长度为 $2^0, 2^1, …, 2^k$ （直到不能再大为止）的区间的最小值（即求出所有长度为2的幂的区间），其时间复杂度为：</p>
 <ul>
-<li>可能的起点个数：$O(n)$</li>
+<li><p>可能的起点个数：$O(n)$</p>
+</li>
 <li><p>每个起点最多计算的区间个数：$O(log(n))$</p>
 </li>
 <li><p>求解每个区间最小值时的花费：$O(1)$</p>
 </li>
-<li>总时间复杂度：$O(nlog(n))$</li>
+<li><p>总时间复杂度：$O(nlog(n))$</p>
+</li>
 </ul>
-<p>预处理的难点在于如何求解每个区间最小值来使得其花费为 $O(1)$。可以利用上文的动态规划思想，具体算法为：依次求出长度为 $2^0, 2^1, …, 2^k$ 的所有区间的最小值，在求长度为 $2^l(0&lt;l\le k)$的区间: $[i, j] (j-i+1=2^l)$ 时，可利用两个长度为 $l-1$ 的区间 $ [i, i + 2^{l-1}-1] $ 和  $[i+2^{l-1}, j]$ 直接比较求出。为了节省状态空间，定义 $f[i][l]$ 为：起点为 $i$, 区间长度为 $2^l$ 的区间最小值，其状态转移方程为：</p>
-<script type="math/tex; mode=display">
-f[i][l]=min(f[i][l-1], f[i+2^{l-1}][l-1])</script><p>状态初始化为：$f[i][0]=a<a href="0\le i< n">i</a>$。</p>
+<p>预处理的难点在于如何求解每个区间最小值来使得其花费为 $O(1)$。可以利用上文的动态规划思想，具体算法为：依次求出长度为 $2^0, 2^1, …, 2^k$ 的所有区间的最小值，在求长度为 $2^l(0&lt;l\le k)$的区间: $[i, j] (j-i+1=2^l)$ 时，可利用两个长度为 $l-1$ 的区间 $ [i, i + 2^{l-1}-1] $ 和  $[i+2^{l-1}, j]$ 直接比较求出。为了节省状态空间，定义 $f[i][l]$ 为：起点为 $i$, 区间长度为 $2^l$ 的区间最小值，其状态转移方程为：<br>$$<br>f[i][l]=min(f[i][l-1], f[i+2^{l-1}][l-1])<br>$$<br>状态初始化为：$f[i][0]=a[i](0\le i&lt; n)$。</p>
 <p>计算 $RMQ(i, j)$ 时，其过程及时间复杂度为：</p>
 <ul>
 <li><p>求出最大的 $k$ 使得 $2^k\le j-i+1$：$O(1)$</p>
 </li>
 <li><p>区间 $[i, j]$ 可分解为 $[i, i+2^k-1], [j-2^k+1, j]$ 的并集，取两区间最小值：$O(1)$</p>
 </li>
-<li>总时间复杂度：$O(1)$</li>
+<li><p>总时间复杂度：$O(1)$</p>
+</li>
 </ul>
 <p>对于区间的分解，作如下解释：因为预处理过程中只求出了所有长度为2的幂的区间，所以分解的两个区间的长度都要是2的幂，故第一个区间从 $i$ 开始，长度为 $2^k$，第二个区间需要覆盖剩余区间，故以 $j$ 为结尾，向前延伸到长度为 $2^k$ 为止，由于 $2^{k+1}&gt;j-i+1$，故两区间必覆盖区间 $[i, j]$。</p>
-<p>其时间复杂度记为：$<o(nlog(n)), o(1)="">$。</o(nlog(n)),></p>
+<p>其时间复杂度记为：$&lt;O(nlog(n)), O(1)&gt;$。</p>
 <p>例如对于如下数据：</p>
-<div class="table-container">
 <table>
 <thead>
 <tr>
-<th style="text-align:center">$i$</th>
-<th style="text-align:center">0</th>
-<th style="text-align:center">1</th>
-<th style="text-align:center">2</th>
-<th style="text-align:center">3</th>
-<th style="text-align:center">4</th>
-<th style="text-align:center">5</th>
-<th style="text-align:center">6</th>
-<th style="text-align:center">7</th>
-<th style="text-align:center">8</th>
-<th style="text-align:center">9</th>
+<th align="center">$i$</th>
+<th align="center">0</th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+<th align="center">4</th>
+<th align="center">5</th>
+<th align="center">6</th>
+<th align="center">7</th>
+<th align="center">8</th>
+<th align="center">9</th>
 </tr>
 </thead>
-<tbody>
-<tr>
-<td style="text-align:center">$A[i]$</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">9</td>
-<td style="text-align:center">7</td>
-<td style="text-align:center">6</td>
-<td style="text-align:center">5</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">3</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">6</td>
+<tbody><tr>
+<td align="center">$A[i]$</td>
+<td align="center">2</td>
+<td align="center">9</td>
+<td align="center">7</td>
+<td align="center">6</td>
+<td align="center">5</td>
+<td align="center">1</td>
+<td align="center">8</td>
+<td align="center">3</td>
+<td align="center">4</td>
+<td align="center">6</td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p>其预处理过程如下图所示：</p>
 <img src="/2020/10/29/rmq/st_draw.gif" class="">
+
 <p>其求解 $RMQ(2, 8)$ 时，过程如下：</p>
 <ul>
 <li>求出 $k=log(8-2)=2$</li>
 <li>将区间分解为：$[2, 2 + 2^2-1], [8-2^2+1, 8]$， 即：$[2,5],[5,8]$，其区间最小值为：$min(f[2][2], f[5][2])$</li>
 </ul>
 <p>具体代码如下：</p>
-<pre class=" language-lang-python"><code class="language-lang-python">from math import pow, log 
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> math <span class="token keyword">import</span> pow<span class="token punctuation">,</span> log 
 
-class St(object):
-    def __init__(self, a):
-        self.a = a
-        self.n = len(a)
-        self.f = [[0 for _ in range(self.n)] for _ in range(self.n)]
+<span class="token keyword">class</span> <span class="token class-name">St</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>a <span class="token operator">=</span> a
+        self<span class="token punctuation">.</span>n <span class="token operator">=</span> len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>f <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">]</span>
 
-    def preprocess(self):
-        for i in range(self.n):
-            self.f[i][0] = self.a[i] 
+    <span class="token keyword">def</span> <span class="token function">preprocess</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>i<span class="token punctuation">]</span> 
 
-        k = int(log(self.n) / log(2))
-        for l in range(1, k + 1):
-            for i in range(self.n):
-                if i + int(pow(2, l)) - 1 >= self.n:
-                    break
-                self.f[i][l] = min(self.f[i][l - 1], self.f[i + int(pow(2, l - 1))][l - 1])
+        k <span class="token operator">=</span> int<span class="token punctuation">(</span>log<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span> <span class="token operator">/</span> log<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> l <span class="token keyword">in</span> range<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> k <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span> i <span class="token operator">+</span> int<span class="token punctuation">(</span>pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> l<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">>=</span> self<span class="token punctuation">.</span>n<span class="token punctuation">:</span>
+                    <span class="token keyword">break</span>
+                self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>l<span class="token punctuation">]</span> <span class="token operator">=</span> min<span class="token punctuation">(</span>self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>l <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i <span class="token operator">+</span> int<span class="token punctuation">(</span>pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> l <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">[</span>l <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-    def rmq(self, i, j):
-        k = int(log(j - i + 1) / log(2))
-        return min(self.f[i][k], self.f[j - int(pow(2, k)) + 1][k])
+    <span class="token keyword">def</span> <span class="token function">rmq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        k <span class="token operator">=</span> int<span class="token punctuation">(</span>log<span class="token punctuation">(</span>j <span class="token operator">-</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">/</span> log<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> min<span class="token punctuation">(</span>self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>f<span class="token punctuation">[</span>j <span class="token operator">-</span> int<span class="token punctuation">(</span>pow<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> k<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-if __name__ == '__main__':
-    a = [2, 9, 7, 6, 5, 1, 8, 3, 4, 6]
-    st = St(a)
-    st.preprocess()
-    print(st.rmq(2, 8))
-</code></pre>
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span>
+    st <span class="token operator">=</span> St<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+    st<span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span>st<span class="token punctuation">.</span>rmq<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 <h1 id="算法组合"><a href="#算法组合" class="headerlink" title="算法组合"></a>算法组合</h1><p>现在，共有了四种求解 $RMQ$ 的算法：</p>
 <ul>
-<li>不进行任何预处理：$<o(1), o(n)="">$</o(1),></li>
-<li>预处理全部区间（动态规划）：$<o(n^2), o(1)="">$</o(n^2),></li>
-<li>分块：$<o(n), o(\sqrt="" n)="">$</o(n),></li>
-<li>预处理一部分区间（稀疏表）：$<o(nlog(n)), o(1)="">$</o(nlog(n)),></li>
+<li>不进行任何预处理：$&lt;O(1), O(n)&gt;$</li>
+<li>预处理全部区间（动态规划）：$&lt;O(n^2), O(1)&gt;$</li>
+<li>分块：$&lt;O(n), O(\sqrt n)&gt;$</li>
+<li>预处理一部分区间（稀疏表）：$&lt;O(nlog(n)), O(1)&gt;$</li>
 </ul>
 <p>可以通过如下方式进行算法组合：</p>
 <ul>
@@ -648,7 +635,7 @@ if __name__ == '__main__':
 <li>选择块间 $RMQ$ 算法</li>
 <li>选择块内 $RMQ$ 算法</li>
 </ul>
-<p>假设选择时间复杂度为 $<p_1(n), q_1(n)="">$ 的块间 $RMQ$ 算法，时间复杂度为 $<p_2(n), q_2(n)="">$ 的块内 $RMQ$ 算法，</p_2(n),></p_1(n),></p>
+<p>假设选择时间复杂度为 $&lt;p_1(n), q_1(n)&gt;$ 的块间 $RMQ$ 算法，时间复杂度为 $&lt;p_2(n), q_2(n)&gt;$ 的块内 $RMQ$ 算法，</p>
 <p>则预处理的时间复杂度为：</p>
 <ul>
 <li>计算出每一块内的最小值：$O(n)$</li>
@@ -662,217 +649,150 @@ if __name__ == '__main__':
 <li>块内查询：$q_2(b)$</li>
 <li>总时间复杂度：$O(q_1(n/b)+q_2(b))$</li>
 </ul>
-<h2 id="组合1（稀疏表-无预处理）"><a href="#组合1（稀疏表-无预处理）" class="headerlink" title="组合1（稀疏表+无预处理）"></a>组合1（稀疏表+无预处理）</h2><p>块间采用稀疏表算法，块内不进行预处理，块大小为 $log(n)$，即：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&p_1&(n)=nlog(n)\\\\
-&q_1&(n)=1\\\\
-&p_2&(n)=1\\\\
-&q_2&(n)=n\\\\
-&b&=log(n)
-\end{eqnarray*}</script><p>预处理的时间复杂度为：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&O&(n+p_1(n/b)+(n/b)p_2(b))\\\\
-=&O&(n+n/b\cdot log(n/b)+n/b)\\\\
-=&O&(n+n/log(n)\cdot log(n/log(n))+(n/log(n)))\\\\
-=&O&(n+n/log(n)\cdot log(n)+n)\\\\
-=&O&(n)
-\end{eqnarray*}</script><p>查询的时间复杂度为：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&O&(q_1(n/b)+q_2(b))\\\\
-=&O&(1+log(n))\\\\
-=&O&(log(n))
-\end{eqnarray*}</script><p>故其时间复杂度可记为：$<o(n), o(log(n))="">$。</o(n),></p>
+<h2 id="组合1（稀疏表-无预处理）"><a href="#组合1（稀疏表-无预处理）" class="headerlink" title="组合1（稀疏表+无预处理）"></a>组合1（稀疏表+无预处理）</h2><p>块间采用稀疏表算法，块内不进行预处理，块大小为 $log(n)$，即：<br>$$<br>\begin{eqnarray*}<br>&amp;p_1&amp;(n)=nlog(n)\\<br>&amp;q_1&amp;(n)=1\\<br>&amp;p_2&amp;(n)=1\\<br>&amp;q_2&amp;(n)=n\\<br>&amp;b&amp;=log(n)<br>\end{eqnarray*}<br>$$<br>预处理的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b)\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+(n/log(n)))\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n)+n)\\<br>=&amp;O&amp;(n)<br>\end{eqnarray*}<br>$$<br>查询的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>=&amp;O&amp;(1+log(n))\\<br>=&amp;O&amp;(log(n))<br>\end{eqnarray*}<br>$$<br>故其时间复杂度可记为：$&lt;O(n), O(log(n))&gt;$。</p>
 <p>其代码如下：</p>
-<pre class=" language-lang-python"><code class="language-lang-python">from math import sqrt, log, pow, inf
-from st import St
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> math <span class="token keyword">import</span> sqrt<span class="token punctuation">,</span> log<span class="token punctuation">,</span> pow<span class="token punctuation">,</span> inf
+<span class="token keyword">from</span> st <span class="token keyword">import</span> St
 
-class Combine1(object):
-    def __init__(self, a):
-        self.a = a
-        self.n = len(a)
-        self.len_b = max(1, int(log(self.n)/log(2)))
-        self.cnt_b = (self.n - 1) // self.len_b + 1
+<span class="token keyword">class</span> <span class="token class-name">Combine1</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>a <span class="token operator">=</span> a
+        self<span class="token punctuation">.</span>n <span class="token operator">=</span> len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>len_b <span class="token operator">=</span> max<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> int<span class="token punctuation">(</span>log<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token operator">/</span>log<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>cnt_b <span class="token operator">=</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> <span class="token number">1</span>
 
-    def preprocess(self):
-        f = [inf for _ in range(self.cnt_b)] 
-        for i in range(self.cnt_b):
-            for j in range(i * self.len_b, i * self.len_b + self.len_b):
-                if j >= self.n:
-                    break
-                f[i] = min(f[i], self.a[j])
+    <span class="token keyword">def</span> <span class="token function">preprocess</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        f <span class="token operator">=</span> <span class="token punctuation">[</span>inf <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">]</span> 
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span>i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">,</span> i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span> j <span class="token operator">>=</span> self<span class="token punctuation">.</span>n<span class="token punctuation">:</span>
+                    <span class="token keyword">break</span>
+                f<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> min<span class="token punctuation">(</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-        self.st = St(f)
-        self.st.preprocess()
+        self<span class="token punctuation">.</span>st <span class="token operator">=</span> St<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>st<span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-    def rmq(self, i, j):
-        ans = inf
-        ith = i // self.len_b 
-        jth = j // self.len_b
+    <span class="token keyword">def</span> <span class="token function">rmq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        ans <span class="token operator">=</span> inf
+        ith <span class="token operator">=</span> i <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b 
+        jth <span class="token operator">=</span> j <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b
 
-        if ith == jth:
-            for k in range(i, j + 1):
-                ans = min(ans, self.a[k])
-        else:
-            for k in range(i, ith * self.len_b + self.len_b):
-                ans = min(ans, self.a[k])
-            for k in range(jth * self.len_b, j + 1):
-                ans = min(ans, self.a[k])
+        <span class="token keyword">if</span> ith <span class="token operator">==</span> jth<span class="token punctuation">:</span>
+            <span class="token keyword">for</span> k <span class="token keyword">in</span> range<span class="token punctuation">(</span>i<span class="token punctuation">,</span> j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> k <span class="token keyword">in</span> range<span class="token punctuation">(</span>i<span class="token punctuation">,</span> ith <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token keyword">for</span> k <span class="token keyword">in</span> range<span class="token punctuation">(</span>jth <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">,</span> j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>k<span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-        if ith + 1 <= jth - 1:
-            ans = min(ans, self.st.rmq(ith + 1, jth - 1))
-        return ans
-</code></pre>
-<h2 id="组合2（稀疏表-稀疏表）"><a href="#组合2（稀疏表-稀疏表）" class="headerlink" title="组合2（稀疏表+稀疏表）"></a>组合2（稀疏表+稀疏表）</h2><p>块间与块内均采用稀疏表，块大小为 $log(n)$，即：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&p_1&(n)=nlog(n)\\\\
-&q_1&(n)=1\\\\
-&p_2&(n)=nlog(n)\\\\
-&q_2&(n)=1\\\\
-&b&=log(n)
-\end{eqnarray*}</script><p>预处理的时间复杂度为：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&O&(n+p_1(n/b)+(n/b)p_2(b))\\\\
-=&O&(n+n/b\cdot log(n/b)+n/b\cdot b\cdot log(b))\\\\
-=&O&(n+n/log(n)\cdot log(n/log(n))+n\cdot log(log(n)))\\\\
-=&O&(n+n+n\cdot log(log(n)))\\\\
-=&O&(n\cdot log(log(n)))
-\end{eqnarray*}</script><p>查询的时间复杂度为：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&O&(q_1(n/b)+q_2(b))\\\\
-=&O&(1)
-\end{eqnarray*}</script><p>故其时间复杂度可记为：$<o(n\cdot log(log(n))),="" o(1)="">$。</o(n\cdot></p>
+        <span class="token keyword">if</span> ith <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;=</span> jth <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>st<span class="token punctuation">.</span>rmq<span class="token punctuation">(</span>ith <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> jth <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> ans</code></pre>
+<h2 id="组合2（稀疏表-稀疏表）"><a href="#组合2（稀疏表-稀疏表）" class="headerlink" title="组合2（稀疏表+稀疏表）"></a>组合2（稀疏表+稀疏表）</h2><p>块间与块内均采用稀疏表，块大小为 $log(n)$，即：<br>$$<br>\begin{eqnarray*}<br>&amp;p_1&amp;(n)=nlog(n)\\<br>&amp;q_1&amp;(n)=1\\<br>&amp;p_2&amp;(n)=nlog(n)\\<br>&amp;q_2&amp;(n)=1\\<br>&amp;b&amp;=log(n)<br>\end{eqnarray*}<br>$$<br>预处理的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b\cdot b\cdot log(b))\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+n\cdot log(log(n)))\\<br>=&amp;O&amp;(n+n+n\cdot log(log(n)))\\<br>=&amp;O&amp;(n\cdot log(log(n)))<br>\end{eqnarray*}<br>$$<br>查询的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>=&amp;O&amp;(1)<br>\end{eqnarray*}<br>$$<br>故其时间复杂度可记为：$&lt;O(n\cdot log(log(n))), O(1)&gt;$。</p>
 <p>其代码如下：</p>
-<pre class=" language-lang-python"><code class="language-lang-python">from math import sqrt, log, pow, inf
-from st import St
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> math <span class="token keyword">import</span> sqrt<span class="token punctuation">,</span> log<span class="token punctuation">,</span> pow<span class="token punctuation">,</span> inf
+<span class="token keyword">from</span> st <span class="token keyword">import</span> St
 
-class Combine2(object):
-    def __init__(self, a):
-        self.a = a
-        self.n = len(a)
-        self.len_b = max(1, int(log(self.n)/log(2)))
-        self.cnt_b = (self.n - 1) // self.len_b + 1
+<span class="token keyword">class</span> <span class="token class-name">Combine2</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>a <span class="token operator">=</span> a
+        self<span class="token punctuation">.</span>n <span class="token operator">=</span> len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>len_b <span class="token operator">=</span> max<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> int<span class="token punctuation">(</span>log<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token operator">/</span>log<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>cnt_b <span class="token operator">=</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> <span class="token number">1</span>
 
-    def preprocess(self):
-        f = [inf for _ in range(self.cnt_b)] 
-        for i in range(self.cnt_b):
-            for j in range(i * self.len_b, i * self.len_b + self.len_b):
-                if j >= self.n:
-                    break
-                f[i] = min(f[i], self.a[j])
+    <span class="token keyword">def</span> <span class="token function">preprocess</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        f <span class="token operator">=</span> <span class="token punctuation">[</span>inf <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">]</span> 
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span>i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">,</span> i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span> j <span class="token operator">>=</span> self<span class="token punctuation">.</span>n<span class="token punctuation">:</span>
+                    <span class="token keyword">break</span>
+                f<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> min<span class="token punctuation">(</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-        # ST between blocks.
-        self.st = St(f)
-        self.st.preprocess()
+        <span class="token comment" spellcheck="true"># ST between blocks.</span>
+        self<span class="token punctuation">.</span>st <span class="token operator">=</span> St<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>st<span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-        # ST winth block.
-        self.sts = []
-        for i in range(self.cnt_b):
-            tmp = self.a[i * self.len_b : min(self.n, i * self.len_b + self.len_b)]
-            self.sts.append(St(tmp))
-            self.sts[i].preprocess()
+        <span class="token comment" spellcheck="true"># ST winth block.</span>
+        self<span class="token punctuation">.</span>sts <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            tmp <span class="token operator">=</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token punctuation">:</span> min<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">,</span> i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">]</span>
+            self<span class="token punctuation">.</span>sts<span class="token punctuation">.</span>append<span class="token punctuation">(</span>St<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            self<span class="token punctuation">.</span>sts<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-    def rmq(self, i, j):
-        ans = inf
-        ith = i // self.len_b 
-        jth = j // self.len_b
+    <span class="token keyword">def</span> <span class="token function">rmq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        ans <span class="token operator">=</span> inf
+        ith <span class="token operator">=</span> i <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b 
+        jth <span class="token operator">=</span> j <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b
 
-        i -= ith * self.len_b
-        j -= jth * self.len_b
-        if ith == jth:
-            ans = min(ans, self.sts[ith].rmq(i, j))  
-        else:
-            ans = min(ans, self.sts[ith].rmq(i, self.len_b - 1))
-            ans = min(ans, self.sts[jth].rmq(0, j))
+        i <span class="token operator">-=</span> ith <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b
+        j <span class="token operator">-=</span> jth <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b
+        <span class="token keyword">if</span> ith <span class="token operator">==</span> jth<span class="token punctuation">:</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sts<span class="token punctuation">[</span>ith<span class="token punctuation">]</span><span class="token punctuation">.</span>rmq<span class="token punctuation">(</span>i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">)</span>  
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sts<span class="token punctuation">[</span>ith<span class="token punctuation">]</span><span class="token punctuation">.</span>rmq<span class="token punctuation">(</span>i<span class="token punctuation">,</span> self<span class="token punctuation">.</span>len_b <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>sts<span class="token punctuation">[</span>jth<span class="token punctuation">]</span><span class="token punctuation">.</span>rmq<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-        if ith + 1 <= jth - 1:
-            ans = min(ans, self.st.rmq(ith + 1, jth - 1))
-        return ans
-</code></pre>
-<h2 id="组合3（稀疏表-组合1）"><a href="#组合3（稀疏表-组合1）" class="headerlink" title="组合3（稀疏表+组合1）"></a>组合3（稀疏表+组合1）</h2><p>块间采用稀疏表算法，块内采用组合1算法，块大小为 $log(n)$，即：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&p_1&(n)=nlog(n)\\\\
-&q_1&(n)=1\\\\
-&p_2&(n)=n\\\\
-&q_2&(n)=log(n)\\\\
-&b&=log(n)
-\end{eqnarray*}</script><p>预处理的时间复杂度为：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&O&(n+p_1(n/b)+(n/b)p_2(b))\\\\
-=&O&(n+n/b\cdot log(n/b)+n/b\cdot b)\\\\
-=&O&(n+n/log(n)\cdot log(n/log(n))+n)\\\\
-=&O&(n)
-\end{eqnarray*}</script><p>查询的时间复杂度为：</p>
-<script type="math/tex; mode=display">
-\begin{eqnarray*}
-&O&(q_1(n/b)+q_2(b))\\\\
-=&O&(1+log(log(n)))\\\\
-=&O&(log(log(n)))
-\end{eqnarray*}</script><p>故其时间复杂度可记为：$<o(n), o(log(log(n)))="">$。</o(n),></p>
+        <span class="token keyword">if</span> ith <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;=</span> jth <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>st<span class="token punctuation">.</span>rmq<span class="token punctuation">(</span>ith <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> jth <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> ans</code></pre>
+<h2 id="组合3（稀疏表-组合1）"><a href="#组合3（稀疏表-组合1）" class="headerlink" title="组合3（稀疏表+组合1）"></a>组合3（稀疏表+组合1）</h2><p>块间采用稀疏表算法，块内采用组合1算法，块大小为 $log(n)$，即：<br>$$<br>\begin{eqnarray*}<br>&amp;p_1&amp;(n)=nlog(n)\\<br>&amp;q_1&amp;(n)=1\\<br>&amp;p_2&amp;(n)=n\\<br>&amp;q_2&amp;(n)=log(n)\\<br>&amp;b&amp;=log(n)<br>\end{eqnarray*}<br>$$<br>预处理的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b\cdot b)\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+n)\\<br>=&amp;O&amp;(n)<br>\end{eqnarray*}<br>$$<br>查询的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>=&amp;O&amp;(1+log(log(n)))\\<br>=&amp;O&amp;(log(log(n)))<br>\end{eqnarray*}<br>$$<br>故其时间复杂度可记为：$&lt;O(n), O(log(log(n)))&gt;$。</p>
 <p>其代码如下：</p>
-<pre class=" language-lang-python"><code class="language-lang-python">from math import sqrt, log, pow, inf
-from st import St
-from combine1 import combine1
+<pre class=" language-python"><code class="language-python"><span class="token keyword">from</span> math <span class="token keyword">import</span> sqrt<span class="token punctuation">,</span> log<span class="token punctuation">,</span> pow<span class="token punctuation">,</span> inf
+<span class="token keyword">from</span> st <span class="token keyword">import</span> St
+<span class="token keyword">from</span> combine1 <span class="token keyword">import</span> combine1
 
-class Combine3(object):
-    def __init__(self, a):
-        self.a = a
-        self.n = len(a)
-        self.len_b = max(1, int(log(self.n)/log(2)))
-        self.cnt_b = (self.n - 1) // self.len_b + 1
+<span class="token keyword">class</span> <span class="token class-name">Combine3</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> a<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>a <span class="token operator">=</span> a
+        self<span class="token punctuation">.</span>n <span class="token operator">=</span> len<span class="token punctuation">(</span>a<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>len_b <span class="token operator">=</span> max<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> int<span class="token punctuation">(</span>log<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">)</span><span class="token operator">/</span>log<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>cnt_b <span class="token operator">=</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> <span class="token number">1</span>
 
-    def preprocess(self):
-        f = [inf for _ in range(self.cnt_b)] 
-        for i in range(self.cnt_b):
-            for j in range(i * self.len_b, i * self.len_b + self.len_b):
-                if j >= self.n:
-                    break
-                f[i] = min(f[i], self.a[j])
+    <span class="token keyword">def</span> <span class="token function">preprocess</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        f <span class="token operator">=</span> <span class="token punctuation">[</span>inf <span class="token keyword">for</span> _ <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">]</span> 
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span>i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">,</span> i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span> j <span class="token operator">>=</span> self<span class="token punctuation">.</span>n<span class="token punctuation">:</span>
+                    <span class="token keyword">break</span>
+                f<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> min<span class="token punctuation">(</span>f<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span>
 
-        # ST between blocks.
-        self.st = St(f)
-        self.st.preprocess()
+        <span class="token comment" spellcheck="true"># ST between blocks.</span>
+        self<span class="token punctuation">.</span>st <span class="token operator">=</span> St<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>st<span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-        # ST winth block.
-        self.combine1s = []
-        for i in range(self.cnt_b):
-            tmp = self.a[i * self.len_b : min(self.n, i * self.len_b + self.len_b)]
-            self.combine1s.append(Combine1(tmp))
-            self.combine1s[i].preprocess()
+        <span class="token comment" spellcheck="true"># ST winth block.</span>
+        self<span class="token punctuation">.</span>combine1s <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>self<span class="token punctuation">.</span>cnt_b<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            tmp <span class="token operator">=</span> self<span class="token punctuation">.</span>a<span class="token punctuation">[</span>i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token punctuation">:</span> min<span class="token punctuation">(</span>self<span class="token punctuation">.</span>n<span class="token punctuation">,</span> i <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b <span class="token operator">+</span> self<span class="token punctuation">.</span>len_b<span class="token punctuation">)</span><span class="token punctuation">]</span>
+            self<span class="token punctuation">.</span>combine1s<span class="token punctuation">.</span>append<span class="token punctuation">(</span>Combine1<span class="token punctuation">(</span>tmp<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            self<span class="token punctuation">.</span>combine1s<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>preprocess<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-    def rmq(self, i, j):
-        ans = inf
-        ith = i // self.len_b 
-        jth = j // self.len_b
+    <span class="token keyword">def</span> <span class="token function">rmq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        ans <span class="token operator">=</span> inf
+        ith <span class="token operator">=</span> i <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b 
+        jth <span class="token operator">=</span> j <span class="token operator">//</span> self<span class="token punctuation">.</span>len_b
 
-        i -= ith * self.len_b
-        j -= jth * self.len_b
-        if ith == jth:
-            ans = min(ans, self.combine1s[ith].rmq(i, j))  
-        else:
-            ans = min(ans, self.combine1s[ith].rmq(i, self.len_b - 1))
-            ans = min(ans, self.combine1s[jth].rmq(0, j))
+        i <span class="token operator">-=</span> ith <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b
+        j <span class="token operator">-=</span> jth <span class="token operator">*</span> self<span class="token punctuation">.</span>len_b
+        <span class="token keyword">if</span> ith <span class="token operator">==</span> jth<span class="token punctuation">:</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>combine1s<span class="token punctuation">[</span>ith<span class="token punctuation">]</span><span class="token punctuation">.</span>rmq<span class="token punctuation">(</span>i<span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">)</span>  
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>combine1s<span class="token punctuation">[</span>ith<span class="token punctuation">]</span><span class="token punctuation">.</span>rmq<span class="token punctuation">(</span>i<span class="token punctuation">,</span> self<span class="token punctuation">.</span>len_b <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>combine1s<span class="token punctuation">[</span>jth<span class="token punctuation">]</span><span class="token punctuation">.</span>rmq<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> j<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-        if ith + 1 <= jth - 1:
-            ans = min(ans, self.st.rmq(ith + 1, jth - 1))
-        return ans
-</code></pre>
+        <span class="token keyword">if</span> ith <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">&lt;=</span> jth <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            ans <span class="token operator">=</span> min<span class="token punctuation">(</span>ans<span class="token punctuation">,</span> self<span class="token punctuation">.</span>st<span class="token punctuation">.</span>rmq<span class="token punctuation">(</span>ith <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> jth <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> ans</code></pre>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>至此，共得出7种算法，如下：</p>
 <ul>
-<li>不进行任何预处理：$<o(1), o(n)="">$</o(1),></li>
-<li>预处理全部区间（动态规划）：$<o(n^2), o(1)="">$</o(n^2),></li>
-<li>分块：$<o(n), o(\sqrt="" n)="">$</o(n),></li>
-<li>预处理一部分区间（稀疏表）：$<o(nlog(n)), o(1)="">$</o(nlog(n)),></li>
-<li>组合1：$<o(n), o(log(n))="">$</o(n),></li>
-<li>组合2：$<o(n\cdot log(log(n))),="" o(1)="">$</o(n\cdot></li>
-<li>组合3：$<o(n), o(log(log(n)))="">$</o(n),></li>
+<li>不进行任何预处理：$&lt;O(1), O(n)&gt;$</li>
+<li>预处理全部区间（动态规划）：$&lt;O(n^2), O(1)&gt;$</li>
+<li>分块：$&lt;O(n), O(\sqrt n)&gt;$</li>
+<li>预处理一部分区间（稀疏表）：$&lt;O(nlog(n)), O(1)&gt;$</li>
+<li>组合1：$&lt;O(n), O(log(n))&gt;$</li>
+<li>组合2：$&lt;O(n\cdot log(log(n))), O(1)&gt;$</li>
+<li>组合3：$&lt;O(n), O(log(log(n)))&gt;$</li>
 </ul>
 <p>另外，稀疏表再此和组合2组合，可以继续减少预处理的时间复杂度为 $O(n\cdot log(log(log(n)))$，查询时间复杂度不变；稀疏表再此和组合3组合，可以继续减少查询的时间复杂度为 $O(log(log(log(n)))$，预处理时间复杂度不变。组合可以一直进行下去。</p>
 <p><strong>点击<a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/RMQ">下载</a>代码.</strong></p>
