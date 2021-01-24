@@ -6,7 +6,7 @@
   <link href="http://ackera.github.io/atom.xml" rel="self"/>
   
   <link href="http://ackera.github.io/"/>
-  <updated>2021-01-20T06:32:39.484Z</updated>
+  <updated>2021-01-24T16:09:22.071Z</updated>
   <id>http://ackera.github.io/</id>
   
   <author>
@@ -17,19 +17,19 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>RMQ</title>
+    <title>Rzange Minimun Queries(Part One)</title>
     <link href="http://ackera.github.io/2020/10/29/rmq/"/>
     <id>http://ackera.github.io/2020/10/29/rmq/</id>
     <published>2020-10-29T08:44:12.000Z</published>
-    <updated>2021-01-20T06:32:39.484Z</updated>
+    <updated>2021-01-24T16:09:22.071Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;给定数组A，两个下标$ i&amp;lt;=j $, 求出$A[i], A[i + 1], … ,</summary>
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;本文参考自斯坦福大学数据结构课程 &lt;a href=&quot;http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/&quot;&gt;CS166&lt;/a&gt; 的 &lt;a</summary>
         
       
     
