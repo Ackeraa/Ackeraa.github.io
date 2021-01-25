@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Acker&#39;s Blog</title>
   
-  <subtitle>Acker</subtitle>
+  <subtitle>Algorithms</subtitle>
   <link href="http://ackera.github.io/atom.xml" rel="self"/>
   
   <link href="http://ackera.github.io/"/>
