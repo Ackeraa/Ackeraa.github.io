@@ -6,7 +6,9 @@
     <content><![CDATA[<blockquote>
 <p>本文参考自斯坦福大学数据结构课程 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/00/Slides00.pdf">Range Minimum Queries, Part One</a></p>
 </blockquote>
-<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><p>给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。</p>
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>video</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span><span class="token punctuation">'</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>video/mp4<span class="token punctuation">'</span></span> <span class="token attr-name">controls</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>controls<span class="token punctuation">'</span></span>  <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>100%<span class="token punctuation">'</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">'</span>100%<span class="token punctuation">'</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>video</span><span class="token punctuation">></span></span></code></pre>
+<p>给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。</p>
 <p>乍一看问题并没有任何难度，直接枚举 $i,j$ 之间的元素，取出最小的即可，时间复杂度为$O(n)$。但假如存在很多组询问呢？</p>
 <p>对于一个长度为 $n$ 的数组，最多存在 $1+2+3+…+n=n(n+1)/2$ 即 $O(n^2)$ 个合法询问，若采用上述解法:</p>
 <ul>
