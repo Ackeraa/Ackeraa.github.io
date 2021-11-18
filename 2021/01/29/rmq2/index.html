@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"acker.fun","root":"/","scheme":"Mist","version":"8.0.1","exturl":false,"sidebar":{"position":"right","width":300,"display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Range Minimum Queries, Part Two  问题回顾在 Part One 中，基于分块算法，建立了这样一个算法框架：  块间采用时间复杂度为 $&lt;p_1(n),q_1(n)&gt;$ 的 $RMQ$ 算法 块内采用时间复杂度为 $&lt;p_2(n),q_2(n)&gt;$ 的 $RMQ$ 算法 块的大小为 $b$ 则">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Range Minimum Queries(Part Two)">
+<meta property="og:url" content="https://acker.fun/2021/01/29/rmq2/index.html">
+<meta property="og:site_name" content="Acker&#39;s Blog">
+<meta property="og:description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Range Minimum Queries, Part Two  问题回顾在 Part One 中，基于分块算法，建立了这样一个算法框架：  块间采用时间复杂度为 $&lt;p_1(n),q_1(n)&gt;$ 的 $RMQ$ 算法 块内采用时间复杂度为 $&lt;p_2(n),q_2(n)&gt;$ 的 $RMQ$ 算法 块的大小为 $b$ 则">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-29T03:50:39.000Z">
+<meta property="article:modified_time" content="2021-04-15T03:14:00.265Z">
+<meta property="article:author" content="Acker">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://acker.fun/2021/01/29/rmq2/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Range Minimum Queries(Part Two) | Acker's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="Acker's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Acker's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Algorithms</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9B%9E%E9%A1%BE"><span class="nav-number">1.</span> <span class="nav-text">问题回顾</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E8%AE%A8%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">一些讨论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%9B%E5%8D%A1%E5%B0%94%E6%A0%91"><span class="nav-number">3.</span> <span class="nav-text">笛卡尔树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fischer-Heun-%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">Fischer-Heun 算法</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Acker</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://acker.fun/2021/01/29/rmq2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Acker">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Acker's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Range Minimum Queries(Part Two)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-01-29 11:50:39" itemprop="dateCreated datePublished" datetime="2021-01-29T11:50:39+08:00">2021-01-29</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-15 11:14:00" itemprop="dateModified" datetime="2021-04-15T11:14:00+08:00">2021-04-15</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/01/Slides01.pdf">Range Minimum Queries, Part Two</a></p>
+</blockquote>
+<h1 id="问题回顾"><a href="#问题回顾" class="headerlink" title="问题回顾"></a>问题回顾</h1><p>在 <a href="RMQ.md">Part One</a> 中，基于分块算法，建立了这样一个算法框架：</p>
+<ul>
+<li>块间采用时间复杂度为 $&lt;p_1(n),q_1(n)&gt;$ 的 $RMQ$ 算法</li>
+<li>块内采用时间复杂度为 $&lt;p_2(n),q_2(n)&gt;$ 的 $RMQ$ 算法</li>
+<li>块的大小为 $b$</li>
+<li>则预处理的时间复杂度为 ：$O(n+p_1(n/b)+(n/b)\cdot p_2(b))$</li>
+<li>查询的时间复杂度为：$O(q_1(n/b)+q_2(b))$</li>
+</ul>
+<p>得到的三个组合中，时间复杂度最优能做到 $&lt;O(n\cdot log(log(n))), O(1)&gt;$，或者 $&lt;O(n), O(log(log(n)))&gt;$。</p>
+<p>在这样一个框架下是否可以设计出 $&lt;O(n), O(1)&gt;$ 的算法呢？</p>
+<p>分析预处理和查询的时间复杂度公式可知：当 $p_2(b)=O(b)$，$q_2(b)=O(1)$ 时才有可能满足，即如果块内 $RMQ$ 算法的时间复杂度可以做到 $&lt;O(n), O(1)&gt;$ ，就可能得到一个时间复杂度为 $&lt;O(n), O(1)&gt;$ 的 $RMQ$ 算法。</p>
+<p>下面主要讨论如何将块内 $RMQ$ 算法的时间复杂度降到 $&lt;O(n), O(1)&gt;$。</p>
+<h1 id="一些讨论"><a href="#一些讨论" class="headerlink" title="一些讨论"></a>一些讨论</h1><p>为了讨论方便，作如下定义：</p>
+<ul>
+<li><p>$RMQ_A(i, j)$ ：区间 $[i, j]$ 的最小值的下标</p>
+</li>
+<li><p>$B_1, B_2$ ：长度为 $b$ 的块</p>
+</li>
+<li><p>$B_1\sim B_2$ ：对于任意的 $0\le i\le j &lt; b, RMQ_{B_1}(i,j)=RMQ_{B_2}(i,j)$，称之为相似</p>
+</li>
+</ul>
+<p>对于块内 $RMQ$，可以充分利用的优势是其区间长度固定为一个不大的常数 $b$，对于一个极大的区间$n$，存在很多相似的块，对于相似的块，只进行一次 $RMQ_A$ 预处理即可。</p>
+<p>例如，下图两块即为相似</p>
+<p>那么如何找出相似的块呢？</p>
+<p>一个直观的想法是看其排列是否相同，即按照大小关系，将块内的数转换为正整数区间$[1,b]$ 内的整数，如下图所示。</p>
+<p>我们猜测如果 $B_1, B_2$ 排列相同，那么 $B_1 \sim B_2$。</p>
+<p>但这种做法存在两个问题：</p>
+<ul>
+<li>存在  $B_1, B_2$ 排列不同，但  $B_1 \sim B_2$ 的情况，即这种方法无法找出所有相似的块，如下图：</li>
+</ul>
+<ul>
+<li>一个块的排列个数有 $b!$ 个，即对于特殊构造的序列（每一块的排列都不相同），依然需要对每一块进行一次 $RMQ$ 预处理</li>
+</ul>
+<p>所以，需要一种更好的判断标准。上述方法考虑的是什么样的块是相似的，我们可以反过来考虑，即相似的块具有什么性质。</p>
+<p>可以发现，如果 $B_1 \sim B_2$，那么 $B_1, B_2$ 的最小值必然出现在相同的位置（即下标相同），该性质在最小值左右两边的子区间内递归满足。这就引出了下文要介绍的笛卡尔树。</p>
+<h1 id="笛卡尔树"><a href="#笛卡尔树" class="headerlink" title="笛卡尔树"></a>笛卡尔树</h1><p>笛卡尔树是从数组转化而来的二叉树，定义如下：</p>
+<ul>
+<li>空数组构成一棵空的笛卡尔树</li>
+<li>对于非空数组，根结点保存最小值的下标，左右孩子是最小值左右两边子区间构成的笛卡尔树</li>
+</ul>
+<p>如下图所示：</p>
+<p>有如下定理：</p>
+<blockquote>
+<p>$B_1, B_2$ 是长度为 $b$ 的块，$B_1 \sim B_2$ 当且仅当 $B_1, B_2$ 构成的笛卡尔树相同。</p>
+</blockquote>
+<p>所以，如果可以构建出所有块的笛卡尔树，就可以判断出哪些块是相似的。那么如何构建一棵笛卡尔树呢？</p>
+<p>一个简单粗暴的方法是这样的：</p>
+<ul>
+<li>遍历数组寻找最小值</li>
+<li>递归构建最小值左边子区间的笛卡尔树</li>
+<li>递归构建最小值右边子区间的笛卡尔树</li>
+</ul>
+<p>但其效率取决于数组形态：</p>
+<ul>
+<li>如果每次都能在最优位置（区间中间）划分，时间复杂度为：$O(nlog(n))$，如下图所示：</li>
+<li>如果每次都在最坏位置（区间首部或尾部）划分，其时间复杂度退化为：$O(n^2)$，如下图所示：</li>
+</ul>
+<p>具体代码如下：</p>
+<pre class=" language-python"><code class="language-python"></code></pre>
+<p>一种更好的方法是线性增加节点，即先构建数组第一个数的笛卡尔树，在此基础上增加第二个数，并调整笛卡尔树，然后再增加第三个数，以此类推。</p>
+<p>在正式介绍具体算法之前，先说明以下几点性质：</p>
+<ul>
+<li>对于一个新增加的节点，它不可能成为任何节点的左孩子，原因是在笛卡尔树中左孩子代表的数在其父节点所代表的数的左边，而我们是从左向右增加，所以它要么是新的根结点，要么是某节点的右孩子</li>
+<li>根据上一个性质，可知，每次新节点的增加，并不会改变任何已有节点的左子树，只会更改其的父节点或右子树</li>
+<li>笛卡尔树满足小根堆的性质，即根节点的值小于左右孩子</li>
+</ul>
+<p>有了以上几点性质，便可以提出一个基于栈的算法来构建笛卡尔树，在加入一个新节点时：</p>
+<ol>
+<li>当栈顶节点值大于新节点值时执行出栈操作，直至栈顶节点值小于新节点值或栈空</li>
+<li>把新节点的左孩子置为最后一个出栈的节点（如果没有节点出栈，置空）</li>
+<li>把新节点置为栈顶节点的右孩子（如果栈空，新节点成为根节点）</li>
+<li>将新节点入栈</li>
+</ol>
+<p>现在对该算法的正确性进行一些解释。对于一个递增的序列，只会执行 3、4，即不断的向右增加节点且入栈，正确性显然，栈始终保留一个递增的节点序列，如下图所示：</p>
+<p>如果此时加入的新节点比栈顶节点（即上次将加入的节点）值小，意味着栈顶节点要成为新节点的左子树部分，我们需要找到合适的位置来插入新节点，所以执行出栈操作，直到栈顶节点值小于新节点值或栈空为止，然后将新节点左孩子置为最后一个出栈的节点（也即所有出栈节点的祖先节点），并将新节点置为当前栈顶节点的右孩子（如果栈空，意味着新节点是当前最小节点，直接作为根结点），最后新节点入栈，栈依旧保留一个递增的节点序列。具体流程如下图所示：</p>
+<p>在该算法中，栈的作用是保留一个后续可能会变动的节点序列，在步骤1中，之所以将节点出栈，是因为这些节点会在步骤2中成为新节点的左子树部分，在之后的操作中，不会再变动。</p>
+<p>算法围绕栈来操作，栈操作最多 $2n$ 次：</p>
+<ul>
+<li>每个节点都入栈1次</li>
+<li>每个节点最多出栈1次</li>
+</ul>
+<p>其时间复杂度为：$O(n)$。</p>
+<p>具体代码如下：</p>
+<h1 id="Fischer-Heun-算法"><a href="#Fischer-Heun-算法" class="headerlink" title="Fischer-Heun 算法"></a>Fischer-Heun 算法</h1><p>回顾一下我们的目标：选择一个合适的块大小 $b$，使得：</p>
+<ul>
+<li>有足够多的块相似，以便重复利用 $RMQ_A$ 结构</li>
+<li>块间 $RMQ$ 算法足够快</li>
+</ul>
+<p>我们可以根据块的笛卡尔树是否相同来判断它们是否相似，但如何重复使用呢？也就是说，在预处理完某个块的 $RMQ_A$ 之后，如何以其笛卡尔树为键值进行保存呢？显然一棵树很难作为键值，我们需要寻找其它的特征。</p>
+<p>不难发现，上述基于栈的算法生成的笛卡尔树由其出栈、入栈序列唯一确定，所以可以使用长度为2b的二进制数来代表迪卡尔树，1表示入栈，0表示出栈，称之为笛卡尔树生成数，过程如下图所示：</p>
+<p>至多有 $2^{2b}=4^b$ 个二进制数，故至多有 $4^b$ 个笛卡尔树。</p>
+<p>至此，便可以介绍最终的Fischer-Heun 算法，其思想为：块间采用稀疏表结构，块内采用动态规划，但作如下修改：</p>
+<ul>
+<li>动态规划不再保存最小值，而是保存最小值下标</li>
+<li>定义一个长度为 $4^b$ 的数组 $hash$，$hash[t]$ 存储指向笛卡尔树生成数为 $t$ 的块的指针</li>
+<li>当计算某个块内最小值时，首先计算其笛卡尔树生成数 $t$，若 $hash$ 数组中存在，则直接查询使用，对该块用动态规划进行预处理，计算$t$，并将 $hash[t]$ 指向预处理后的 $RMQ$ 结构</li>
+</ul>
+<p>其预处理时间复杂度为：</p>
+<ul>
+<li>计算每个块的最小值：$O(n)$</li>
+<li>建立稀疏表：$O(n/b\cdot log(n))$</li>
+<li>动态规划预处理最多 $4^b$个块内 $RMQ$，每个块耗费 $O(b^2)$：$O(4^b\cdot b^2)$</li>
+<li>总时间复杂度为：$O(n + n/b\cdot log(n) + 4^b\cdot b^2)$</li>
+</ul>
+<p>令 $b=log_4(n^{1/2})$：<br>$$<br>\begin{eqnarray*}<br>n/b\cdot log(n)=O(n)\\<br>4^b\cdot b^2=n^{1/2}\cdot (log(n))^2=O(n)\\<br>O(n + n/b\cdot log(n) + 4^b\cdot b^2)=O(n)<br>\end{eqnarray*}<br>$$<br>查询的时间复杂度为：$O(1)$</p>
+<p>最终我们得到了一个 $&lt;O(n), O(1)&gt;$的算法，具体代码如下：</p>
+<p>由于该算法的常数较大，在实际应用中，组合1的效率更高一点。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/29/rmq/" rel="prev" title="Range Minimum Queries(Part One)">
+                  <i class="fa fa-chevron-left"></i> Range Minimum Queries(Part One)
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Acker</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e01110cf0b8f2c1e3d39',
+      clientSecret: '6425911a55a0dbf861e3db61275d1865fb9bbbe2',
+      repo        : 'Ackeraa.github.io',
+      owner       : 'Ackeraa',
+      admin       : ['Ackeraa'],
+      id          : '795b0bd3193b51a35a4c1d7d6d2d3d3b',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

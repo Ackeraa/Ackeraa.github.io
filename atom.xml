@@ -6,7 +6,7 @@
   <link href="https://acker.fun/atom.xml" rel="self"/>
   
   <link href="https://acker.fun/"/>
-  <updated>2021-01-28T10:41:52.998Z</updated>
+  <updated>2021-04-15T03:14:00.265Z</updated>
   <id>https://acker.fun/</id>
   
   <author>
@@ -17,11 +17,39 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Range Minimum Queries(Part Two)</title>
+    <link href="https://acker.fun/2021/01/29/rmq2/"/>
+    <id>https://acker.fun/2021/01/29/rmq2/</id>
+    <published>2021-01-29T03:50:39.000Z</published>
+    <updated>2021-04-15T03:14:00.265Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;本文参考自斯坦福大学数据结构课程 &lt;a href=&quot;http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/&quot;&gt;CS166&lt;/a&gt; 的 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="数据结构" scheme="https://acker.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+    
+    <category term="数据结构" scheme="https://acker.fun/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+    <category term="python" scheme="https://acker.fun/tags/python/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Range Minimum Queries(Part One)</title>
     <link href="https://acker.fun/2020/10/29/rmq/"/>
     <id>https://acker.fun/2020/10/29/rmq/</id>
     <published>2020-10-29T08:44:12.000Z</published>
-    <updated>2021-01-28T10:41:52.998Z</updated>
+    <updated>2021-04-13T03:21:20.172Z</updated>
     
     
       
