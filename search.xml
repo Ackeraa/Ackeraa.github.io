@@ -6,7 +6,7 @@
     <content><![CDATA[<blockquote>
 <p>本文参考自斯坦福大学数据结构课程 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/01/Slides01.pdf">Range Minimum Queries, Part Two</a></p>
 </blockquote>
-<h1 id="问题回顾"><a href="#问题回顾" class="headerlink" title="问题回顾"></a>问题回顾</h1><video src="Fig1.mp4" type="video/mp4" controls="controls" width="100%" height="100%">
+<h1 id="问题回顾"><a href="#问题回顾" class="headerlink" title="问题回顾"></a>问题回顾</h1><video src="Fig1.mov" type="video/mov" controls="controls" width="100%" height="100%">
 </video>在 <a href="RMQ.md">Part One</a> 中，基于分块算法，建立了这样一个算法框架：<p></p>
 <ul>
 <li>块间采用时间复杂度为 $&lt;p_1(n),q_1(n)&gt;$ 的 $RMQ$ 算法</li>
