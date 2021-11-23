@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+	<loc>https://acker.fun/2020/10/29/rmq/</loc>
+    
+    <lastmod>2021-11-23</lastmod>
+    
+  </url>
+  
+  <url>
+	<loc>https://acker.fun/2021/01/29/rmq2/</loc>
+    
+    <lastmod>2021-11-23</lastmod>
+    
+  </url>
+  
+  <url>
 	<loc>https://acker.fun/about/index.html</loc>
     
     <lastmod>2021-11-18</lastmod>
@@ -12,20 +26,6 @@
 	<loc>https://acker.fun/friends/index.html</loc>
     
     <lastmod>2021-11-18</lastmod>
-    
-  </url>
-  
-  <url>
-	<loc>https://acker.fun/2021/01/29/rmq2/</loc>
-    
-    <lastmod>2021-04-15</lastmod>
-    
-  </url>
-  
-  <url>
-	<loc>https://acker.fun/2020/10/29/rmq/</loc>
-    
-    <lastmod>2021-04-13</lastmod>
     
   </url>
   
@@ -53,7 +53,7 @@
 
   <url>
     <loc>https://acker.fun/</loc>
-    <lastmod>2021-11-18</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -61,14 +61,14 @@
   
   <url>
     <loc>https://acker.fun/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2021-11-18</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://acker.fun/tags/python/</loc>
-    <lastmod>2021-11-18</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -77,7 +77,7 @@
   
   <url>
     <loc>https://acker.fun/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2021-11-18</lastmod>
+    <lastmod>2021-11-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
