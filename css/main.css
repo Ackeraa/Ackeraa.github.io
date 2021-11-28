@@ -17,10 +17,10 @@
   --btn-default-hover-bg: transparent;
   --btn-default-hover-color: var(--link-hover-color);
   --btn-default-hover-border-color: var(--link-hover-color);
-  --highlight-background: #f0f0f0;
-  --highlight-foreground: #444;
-  --highlight-gutter-background: #dedede;
-  --highlight-gutter-foreground: #555;
+  --highlight-background: #fff;
+  --highlight-foreground: #000;
+  --highlight-gutter-background: #e5e5e5;
+  --highlight-gutter-foreground: #191919;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -42,10 +42,10 @@
     --btn-default-hover-bg: #666;
     --btn-default-hover-color: #ccc;
     --btn-default-hover-border-color: #666;
-    --highlight-background: #f0f0f0;
-    --highlight-foreground: #444;
-    --highlight-gutter-background: #dedede;
-    --highlight-gutter-foreground: #555;
+    --highlight-background: #fff;
+    --highlight-foreground: #000;
+    --highlight-gutter-background: #e5e5e5;
+    --highlight-gutter-foreground: #191919;
   }
   img {
     opacity: 0.75;
@@ -391,6 +391,111 @@ td {
   top: -5px;
   transform: rotate(45deg);
 }
+/*
+
+XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #fff;
+  color: black;
+}
+
+/* Gray DOCTYPE selectors like WebKit */
+.xml .hljs-meta {
+  color: #c0c0c0;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #007400;
+}
+
+.hljs-tag,
+.hljs-attribute,
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-name {
+  color: #aa0d91;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #3F6E74;
+}
+
+.hljs-code,
+.hljs-string,
+.hljs-meta-string {
+  color: #c41a16;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #0E0EFF;
+}
+
+.hljs-title,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-number {
+  color: #1c00cf;
+}
+
+.hljs-section,
+.hljs-meta {
+  color: #643820;
+}
+
+
+.hljs-class .hljs-title,
+.hljs-type,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-params {
+  color: #5c2699;
+}
+
+.hljs-attr {
+  color: #836C28;
+}
+
+.hljs-subst {
+  color: #000;
+}
+
+.hljs-formula {
+  background-color: #eee;
+  font-style: italic;
+}
+
+.hljs-addition {
+  background-color: #baeeba;
+}
+
+.hljs-deletion {
+  background-color: #ffc8bd;
+}
+
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #9b703f;
+}
+
+.hljs-doctag,
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
 code,
 kbd,
 figure.highlight,
@@ -2815,7 +2920,7 @@ hr {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffff93;
+  background: #6c94ff;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
