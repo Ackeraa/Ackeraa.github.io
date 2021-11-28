@@ -26,12 +26,12 @@
 </ul>
 <p>对于块内 $RMQ$，可以充分利用的优势是其区间长度固定为一个不大的常数 $b$，对于一个极大的区间$n$，存在很多相似的块，对于相似的块，只进行一次 $RMQ_A$ 预处理即可。</p>
 <p>例如，如下两块即为相似。</p>
-<img src="/Users/gsx/MyProgram/Python/DataStructure/RMQ/plot/media/videos/b/1080p60/Fig1_ManimCE_v0.12.0.gif" alt="Fig1_ManimCE_v0.12.0" style="zoom:20%;" />
+<img src="/2021/01/29/rmq2/Fig1.gif" class="">
 
 
 <p>那么如何找出相似的块呢？</p>
 <p>最简单的想法是看其排列是否相同，即按照大小关系，将块内的数转换为正整数区间$[1,b]$ 内的整数，如下图所示。</p>
-<img src="/Users/gsx/MyProgram/Python/DataStructure/RMQ/plot/media/videos/b/1080p60/Fig2_ManimCE_v0.12.0.gif" alt="Fig2_ManimCE_v0.12.0" style="zoom:20%;" />
+<img src="/2021/01/29/rmq2/Fig2.gif" class="">
 
 <p>猜测如果 $B_1, B_2$ 排列相同，那么 $B_1 \sim B_2$。</p>
 <p>但这种做法存在两个问题：</p>
@@ -404,7 +404,6 @@
 </ul>
 <p>另外，稀疏表再此和组合2组合，可以继续减少预处理的时间复杂度为 $O(n\cdot log(log(log(n)))$，查询时间复杂度不变；稀疏表再次和组合3组合，可以继续减少查询的时间复杂度为 $O(log(log(log(n)))$，预处理时间复杂度不变。组合可以一直进行下去。</p>
 <p><strong>点击<a href="https://github.com/Ackeraa/DataStructure/tree/master/RMQ">下载</a>代码.</strong></p>
-<p>ps：本文所有图片均用python的turtle库所画。</p>
 ]]></content>
       <categories>
         <category>数据结构</category>
