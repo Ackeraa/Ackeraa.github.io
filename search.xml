@@ -401,7 +401,8 @@
 <li>组合3：$&lt;O(n), O(log(log(n)))&gt;$</li>
 </ul>
 <p>另外，稀疏表再此和组合2组合，可以继续减少预处理的时间复杂度为 $O(n\cdot log(log(log(n)))$，查询时间复杂度不变；稀疏表再次和组合3组合，可以继续减少查询的时间复杂度为 $O(log(log(log(n)))$，预处理时间复杂度不变。组合可以一直进行下去。</p>
-<p><strong>点击<a href="https://github.com/Ackeraa/DataStructure/tree/master/RMQ">下载</a>代码.</strong></p>
+<p><strong><a href="https://github.com/Ackeraa/DataStructure/tree/master/RMQ">下载</a>代码.</strong></p>
+<p><strong>进入<a href="/2021/01/29/rmq2/" title="Part Two">Part Two</a></strong>.</p>
 ]]></content>
       <categories>
         <category>数据结构</category>
