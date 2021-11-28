@@ -42,10 +42,10 @@
     --btn-default-hover-bg: #666;
     --btn-default-hover-color: #ccc;
     --btn-default-hover-border-color: #666;
-    --highlight-background: #1d1f21;
-    --highlight-foreground: #c5c8c6;
-    --highlight-gutter-background: #2d2f31;
-    --highlight-gutter-foreground: #b4b7b5;
+    --highlight-background: #f0f0f0;
+    --highlight-foreground: #444;
+    --highlight-gutter-background: #dedede;
+    --highlight-gutter-foreground: #555;
   }
   img {
     opacity: 0.75;
@@ -2815,7 +2815,7 @@ hr {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #b6b575;
+  background: #ffff93;
   display: inline-block;
   margin-right: 3px;
   transform: translateY(-2px);
