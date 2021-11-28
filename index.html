@@ -299,7 +299,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-11-28 17:58:15" itemprop="dateModified" datetime="2021-11-28T17:58:15+08:00">2021-11-28</time>
+        <time title="修改时间：2021-11-28 20:46:32" itemprop="dateModified" datetime="2021-11-28T20:46:32+08:00">2021-11-28</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -324,18 +324,18 @@
           <blockquote>
 <p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/01/Slides01.pdf">Range Minimum Queries, Part Two</a></p>
 </blockquote>
-<h1 id="问题回顾"><a href="#问题回顾" class="headerlink" title="问题回顾"></a>问题回顾</h1><p>在 <a href="RMQ.md">Part One</a> 中，基于分块算法，建立了这样一个算法框架：</p>
+<h1 id="问题回顾"><a href="#问题回顾" class="headerlink" title="问题回顾"></a>问题回顾</h1><p>在 <a href="/2020/10/29/rmq/" title="Part One">Part One</a>中，基于分块算法，建立了这样一个算法框架：</p>
 <ul>
 <li>块间采用时间复杂度为 $&lt;p_1(n),q_1(n)&gt;$ 的 $RMQ$ 算法</li>
 <li>块内采用时间复杂度为 $&lt;p_2(n),q_2(n)&gt;$ 的 $RMQ$ 算法</li>
 <li>块的大小为 $b$</li>
-<li>则预处理的时间复杂度为 ：$O(n+p_1(n/b)+(n/b)\cdot p_2(b))$</li>
+<li>预处理的时间复杂度为 ：$O(n+p_1(n/b)+(n/b)\cdot p_2(b))$</li>
 <li>查询的时间复杂度为：$O(q_1(n/b)+q_2(b))$</li>
 </ul>
 <p>得到的三个组合中，时间复杂度最优能做到 $&lt;O(n\cdot log(log(n))), O(1)&gt;$，或者 $&lt;O(n), O(log(log(n)))&gt;$。</p>
-<p>在这样一个框架下是否可以设计出 $&lt;O(n), O(1)&gt;$ 的算法呢？</p>
+<p>考虑在这样一个框架下如何设计出 $&lt;O(n), O(1)&gt;$ 的算法。</p>
 <p>分析预处理和查询的时间复杂度公式可知：当 $p_2(b)=O(b)$，$q_2(b)=O(1)$ 时才有可能满足，即如果块内 $RMQ$ 算法的时间复杂度可以做到 $&lt;O(n), O(1)&gt;$ ，就可能得到一个时间复杂度为 $&lt;O(n), O(1)&gt;$ 的 $RMQ$ 算法。</p>
-<p>下面主要讨论如何将块内 $RMQ$ 算法的时间复杂度降到 $&lt;O(n), O(1)&gt;$。</p>
+<p>下文主要讨论如何将块内 $RMQ$ 算法的时间复杂度降到 $&lt;O(n), O(1)&gt;$。</p>
 <h1 id="一些讨论"><a href="#一些讨论" class="headerlink" title="一些讨论"></a>一些讨论</h1><p>首先作如下定义：</p>
 <ul>
 <li>$B_1, B_2$ ：长度为 $b$ 的块</li>
@@ -343,15 +343,14 @@
 <li>$B_1\sim B_2$ ：对于任意的 $0\le i\le j &lt; b, RMQ_{B_1}(i,j)=RMQ_{B_2}(i,j)$，称之为相似</li>
 </ul>
 <p>对于块内 $RMQ$，可以充分利用的优势是其区间长度固定为一个不大的常数 $b$，对于一个极大的区间$n$，存在很多相似的块，对于相似的块，只进行一次 $RMQ_A$ 预处理即可。</p>
-<p>例如，如下两块即为相似。</p>
+<p>例如，如下两块即为相似：</p>
 <img src="/2021/01/29/rmq2/Fig1.gif" class="">
 
 
-<p>那么如何找出相似的块呢？</p>
-<p>最简单的想法是看其排列是否相同，即按照大小关系，将块内的数转换为正整数区间$[1,b]$ 内的整数，如下图所示。</p>
+<p>难点在于找出相似的块，最简单的想法是看其排列是否相同，即按照大小关系，将块内的数转换为正整数区间$[1,b]$ 内的整数，如下图：</p>
 <img src="/2021/01/29/rmq2/Fig2.gif" class="">
 
-<p>猜测如果 $B_1, B_2$ 排列相同，那么 $B_1 \sim B_2$。</p>
+<p>初步猜想如果 $B_1, B_2$ 排列相同，那么 $B_1 \sim B_2$。</p>
 <p>但这种做法存在两个问题：</p>
 <ul>
 <li><p>存在  $B_1, B_2$ 排列不同，但  $B_1 \sim B_2$ 的情况，即这种方法无法找出所有相似的块，如下图：</p>
@@ -364,8 +363,8 @@
 <ul>
 <li>一个块的排列个数有 $b!$ 个，即对于特殊构造的序列（每一块的排列都不相同），依然需要对每一块进行一次 $RMQ$ 预处理</li>
 </ul>
-<p>所以，需要一种更好的判断标准。上述方法考虑的是什么样的块是相似的，可以反过来考虑，即相似的块具有什么性质。</p>
-<p>可以发现，如果 $B_1 \sim B_2$，那么 $B_1, B_2$ 的最小值必然出现在相同的位置（即下标相同），该性质在最小值左右两边的子区间内递归满足，引出笛卡尔树。</p>
+<p>所以，需要一种更好的判断标准。上述猜想考虑的是什么样的块是相似的，可以反过来考虑，即相似的块具有什么性质。</p>
+<p>发现，如果 $B_1 \sim B_2$，那么 $B_1, B_2$ 的最小值必然出现在各自相同的位置（即下标相同），该性质在最小值左右两边的子区间内递归满足，引出笛卡尔树。</p>
 <h1 id="笛卡尔树"><a href="#笛卡尔树" class="headerlink" title="笛卡尔树"></a>笛卡尔树</h1><p>笛卡尔树是从数组转化而来的二叉树，定义如下：</p>
 <ul>
 <li>空数组构成一棵空的笛卡尔树</li>
@@ -379,44 +378,48 @@
 <blockquote>
 <p>$B_1, B_2$ 是长度为 $b$ 的块，$B_1 \sim B_2$ 当且仅当 $B_1, B_2$ 构成的笛卡尔树相同。</p>
 </blockquote>
-<p>所以，如果可以构建出所有块的笛卡尔树，就可以判断出哪些块是相似的。那么如何构建一棵笛卡尔树呢？</p>
-<p>一个简单粗暴的方法是这样的：</p>
+<p>如果可以构建出所有块的笛卡尔树，就可以判断出哪些块是相似的。</p>
+<p>一个简单粗暴的构建方法如下：</p>
 <ul>
 <li>遍历数组寻找最小值</li>
 <li>递归构建最小值左边子区间的笛卡尔树</li>
 <li>递归构建最小值右边子区间的笛卡尔树</li>
 </ul>
-<p>但其效率取决于数组形态：</p>
+<p>但其效率取决于数组特征：</p>
 <ul>
-<li><p>如果每次都能在最优位置（区间中间）划分，时间复杂度为：$O(nlog(n))$，如下图所示：</p>
+<li><p>如果每次都能在最优位置（区间中间）划分，时间复杂度为：$O(nlog(n))$，如下图：</p>
 <img src="/2021/01/29/rmq2/Fig5.gif" class="">
 </li>
-<li><p>如果每次都在最坏位置（区间首部或尾部）划分，其时间复杂度退化为：$O(n^2)$，如下图所示：</p>
-</li>
-</ul>
+<li><p>如果每次都在最坏位置（区间首部或尾部）划分，其时间复杂度退化为：$O(n^2)$，如下图：</p>
 <img src="/2021/01/29/rmq2/Fig6.gif" class="">
 
+</li>
+</ul>
 <p>具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CartesianTreeNode</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, index</span>):</span></span><br><span class="line">        self.index = index</span><br><span class="line">        self.lchild = <span class="literal">None</span></span><br><span class="line">        self.rchild = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CartesianTree</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.root = self.build(<span class="number">0</span>, len(a))</span><br><span class="line">        self.traverse(self.root)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span>(<span class="params">self, l, r</span>):</span></span><br><span class="line">        <span class="keyword">if</span> l == r:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        index = self.a[l:r].index(min(self.a[l:r])) + l</span><br><span class="line">        node = CartesianTreeNode(index)</span><br><span class="line">        node.lchild = self.build(l, index)</span><br><span class="line">        node.rchild = self.build(index + <span class="number">1</span>, r)</span><br><span class="line">        <span class="keyword">return</span> node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">traverse</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="keyword">if</span> node.lchild <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.traverse(node.lchild)</span><br><span class="line">        print(node.index)</span><br><span class="line">        <span class="keyword">if</span> node.rchild <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.traverse(node.rchild)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    cartesian_tree = CartesianTree(a)</span><br></pre></td></tr></table></figure>
 
-<p>一种更好的方法是线性增加节点，即先构建数组第一个数的笛卡尔树，在此基础上增加第二个数，并调整笛卡尔树，然后再增加第三个数，以此类推。</p>
-<p>有以下几点性质：</p>
+<p>一种更高效的方法是线性增加节点，即先构建数组第一个数的笛卡尔树，在此基础上增加第二个数，并调整笛卡尔树，然后再增加第三个数，以此类推。</p>
+<p>考虑以下几点性质：</p>
 <ul>
-<li>对于一个新增加的节点，它不可能成为任何节点的左孩子，原因是在笛卡尔树中左孩子代表的数在其父节点所代表的数的左边，而我们是从左向右增加，所以它要么是新的根结点，要么是某节点的右孩子</li>
-<li>根据上一个性质，可知，每次新节点的增加，并不会改变任何已有节点的左子树，只会更改其的父节点或右子树</li>
+<li>对于一个新增加的节点，它不可能成为任何节点的左孩子，只能是新的根结点，或者某节点的右孩子</li>
+<li>根据上一个性质，每次新节点的增加，并不会改变任何已有节点的左子树，只会更改其的父节点或右子树</li>
 <li>笛卡尔树满足小根堆的性质，即根节点的值小于左右孩子</li>
 </ul>
 <p>据此，便可以提出一个基于栈的算法来构建笛卡尔树，在加入一个新节点时：</p>
+<font color=#37A59A>
+
 <ol>
 <li>当栈顶节点值大于新节点值时执行出栈操作，直至栈顶节点值小于新节点值或栈空</li>
 <li>把新节点的左孩子置为最后一个出栈的节点（如果没有节点出栈，置空）</li>
 <li>把新节点置为栈顶节点的右孩子（如果栈空，新节点成为根节点）</li>
 <li>将新节点入栈</li>
 </ol>
-<p>现在对该算法的正确性进行一些解释。对于一个递增的序列，只会执行 3、4，即不断的向右增加节点且入栈，正确性显然，栈始终保留一个递增的节点序列，如下图所示：</p>
+</font>
+
+<p>对该算法的正确性进行一些解释。对于一个递增的序列，只会执行 3、4，即不断的向右增加节点且入栈，正确性显然，栈始终保留一个递增的节点序列，如下图：</p>
 <img src="/2021/01/29/rmq2/Fig7.gif" class="">
 
-<p>如果此时加入的新节点比栈顶节点（即上次加入的节点）值小，意味着栈顶节点要成为新节点的左子树部分，我们需要找到合适的位置来插入新节点，所以执行出栈操作，直到栈顶节点值小于新节点值或栈空为止，然后将新节点左孩子置为最后一个出栈的节点（也即所有出栈节点的祖先节点），并将新节点置为当前栈顶节点的右孩子（如果栈空，意味着新节点是当前最小节点，直接作为根结点），最后新节点入栈，栈依旧保留一个递增的节点序列。具体流程如下图所示：</p>
+<p>如果此时加入的新节点比栈顶节点（即上次加入的节点）值小，意味着栈顶节点要成为新节点的左子树部分，需要找到合适的位置来插入新节点，所以执行出栈操作，直到栈顶节点值小于新节点值或栈空为止，然后将新节点左孩子置为最后一个出栈的节点（也即所有出栈节点的祖先节点），并将新节点置为当前栈顶节点的右孩子（如果栈空，意味着新节点是当前最小节点，直接作为根结点），最后新节点入栈，栈依旧保留一个递增的节点序列。具体流程如下图：</p>
 <img src="/2021/01/29/rmq2/Fig8.gif" class="">
 
 <p>在该算法中，栈的作用是保留一个后续可能会变动的节点序列，在步骤1中，之所以将节点出栈，是因为这些节点会在步骤2中成为新节点的左子树部分，在之后的操作中，不会再变动。</p>
@@ -436,16 +439,12 @@
 <li>有足够多的块相似，以便重复利用 $RMQ_A$ 结构</li>
 <li>块间 $RMQ$ 算法足够快</li>
 </ul>
-<p>我们可以根据块的笛卡尔树是否相同来判断它们是否相似，但如何重复使用呢？也就是说，在预处理完某个块的 $RMQ_A$ 之后，如何以其笛卡尔树为键值进行保存呢？显然一棵树很难作为键值，我们需要寻找其它的特征。</p>
-<p>不难发现，上述基于栈的算法生成的笛卡尔树由其出栈、入栈序列唯一确定，所以可以使用长度为2b的二进制数来代表迪卡尔树，1表示入栈，0表示出栈，称之为笛卡尔树生成数，代码如下：</p>
+<p>可以根据块的笛卡尔树是否相同来判断它们是否相似，但在预处理完某个块的 $RMQ_A$ 之后，很难以其笛卡尔树为键值进行保存，需要寻找其它的特征。</p>
+<p>不难发现，上述基于栈的算法生成的笛卡尔树由其出栈、入栈序列唯一确定，因此可以使用长度为2b的二进制数来代表笛卡尔树，1表示入栈，0表示出栈，称之为笛卡尔树生成数，代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CartesianTreeNumber</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.num = self.build(a)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        stack = []</span><br><span class="line">        nums = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(a)):</span><br><span class="line">            <span class="keyword">while</span> len(stack) &gt; <span class="number">0</span> <span class="keyword">and</span> a[stack[<span class="number">-1</span>]] &gt; a[i]:</span><br><span class="line">                stack.pop()</span><br><span class="line">                nums.append(<span class="number">0</span>)</span><br><span class="line">            stack.append(i)</span><br><span class="line">            nums.append(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">while</span> len(stack) &gt; <span class="number">0</span>:</span><br><span class="line">            stack.pop()</span><br><span class="line">            nums.append(<span class="number">0</span>)</span><br><span class="line">        num = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> nums:</span><br><span class="line">            num = num * <span class="number">2</span> + x</span><br><span class="line">        <span class="keyword">return</span> num</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a = [<span class="number">27</span>, <span class="number">18</span>, <span class="number">28</span>, <span class="number">18</span>, <span class="number">28</span>, <span class="number">45</span>, <span class="number">90</span>, <span class="number">45</span>, <span class="number">23</span>, <span class="number">53</span>, <span class="number">60</span>, <span class="number">28</span>, <span class="number">74</span>, <span class="number">71</span>, <span class="number">35</span>]  </span><br><span class="line">    cartesian_tree_number = CartesianTreeNumber(a)</span><br><span class="line">    print(cartesian_tree_number.num)</span><br></pre></td></tr></table></figure>
 
-
-
-
-
 <p>至多有 $2^{2b}=4^b$ 个二进制数，故至多有 $4^b$ 个笛卡尔树。</p>
-<p>至此，便可以介绍最终的Fischer-Heun 算法，其思想为：块间采用稀疏表结构，块内采用动态规划，但作如下修改：</p>
+<p>至此，便可讨论最终的Fischer-Heun 算法，其思想为：块间采用稀疏表结构，块内采用动态规划，但作如下修改：</p>
 <ul>
 <li>动态规划不再保存最小值，而是保存最小值下标</li>
 <li>定义一个长度为 $4^b$ 的数组 $hash$，$hash[t]$ 存储指向笛卡尔树生成数为 $t$ 的块的指针</li>
@@ -462,9 +461,8 @@
 <p>最终得到了一个 $&lt;O(n), O(1)&gt;$的算法，具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt, log, inf</span><br><span class="line"><span class="keyword">from</span> cartesian_stack <span class="keyword">import</span> CartesianTreeNumber</span><br><span class="line"><span class="keyword">from</span> st <span class="keyword">import</span> St</span><br><span class="line"><span class="keyword">from</span> dp2 <span class="keyword">import</span> Dp</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Combine4</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.len_b = max(<span class="number">1</span>, int(log(sqrt(self.n))/log(<span class="number">4</span>)))</span><br><span class="line">        self.hash = [<span class="number">-1</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">4</span> ** self.len_b)]</span><br><span class="line">        self.cnt_b = (self.n - <span class="number">1</span>) // self.len_b + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        f = [inf <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.cnt_b)] </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i * self.len_b, i * self.len_b + self.len_b):</span><br><span class="line">                <span class="keyword">if</span> j &gt;= self.n:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                f[i] = min(f[i], self.a[j])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># ST between blocks.</span></span><br><span class="line">        self.st = St(f)</span><br><span class="line">        self.st.preprocess()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        ans = inf</span><br><span class="line">        ith = i // self.len_b </span><br><span class="line">        jth = j // self.len_b</span><br><span class="line"></span><br><span class="line">        i -= ith * self.len_b</span><br><span class="line">        j -= jth * self.len_b</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">find_or_set</span>(<span class="params">ith, i, j</span>):</span></span><br><span class="line">            a = self.a[ith * self.len_b:(ith + <span class="number">1</span>) * self.len_b]</span><br><span class="line">            t = CartesianTreeNumber(a).num</span><br><span class="line">            <span class="keyword">if</span> self.hash[t] == <span class="number">-1</span>:</span><br><span class="line">                dp = Dp(a)</span><br><span class="line">                dp.preprocess()</span><br><span class="line">                self.hash[t] = dp</span><br><span class="line">            <span class="keyword">return</span> a[self.hash[t].rmq(i, j)]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith == jth:</span><br><span class="line">            ans = min(ans, find_or_set(ith, i, j))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ans = min(ans, find_or_set(ith, i, self.len_b - <span class="number">1</span>)) </span><br><span class="line">            ans = min(ans, find_or_set(jth, <span class="number">0</span>, j)) </span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith + <span class="number">1</span> &lt;= jth - <span class="number">1</span>:</span><br><span class="line">            ans = min(ans, self.st.rmq(ith + <span class="number">1</span>, jth - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>: </span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    combine4 = Combine4(a)</span><br><span class="line">    combine4.preprocess()</span><br><span class="line">    print(combine4.rmq(<span class="number">1</span>, <span class="number">13</span>))</span><br></pre></td></tr></table></figure>
 
-
-
 <p>由于该算法的常数较大，在实际应用中，组合1的效率更高一点。</p>
+<p><strong>点击<a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/RMQ">下载</a>代码.</strong></p>
 
       
     </div>
