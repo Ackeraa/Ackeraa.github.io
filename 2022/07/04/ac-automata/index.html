@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"acker.fun","root":"/","scheme":"Mist","version":"8.0.1","exturl":false,"sidebar":{"position":"right","width":300,"display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Aho-Corasick Automata  问题描述 给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有？位置。  暴力的解法是首先枚举文本串 $T$ 的每个位置，然后枚举每个模式串 $P_i$ ，判断 $P_i$ 是否在该位置出现，算法的时间复杂度为： $O(mn)$。 下文主要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Aho-Corasick Automata">
+<meta property="og:url" content="https://acker.fun/2022/07/04/ac-automata/index.html">
+<meta property="og:site_name" content="Acker&#39;s Blog">
+<meta property="og:description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Aho-Corasick Automata  问题描述 给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有？位置。  暴力的解法是首先枚举文本串 $T$ 的每个位置，然后枚举每个模式串 $P_i$ ，判断 $P_i$ 是否在该位置出现，算法的时间复杂度为： $O(mn)$。 下文主要">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://acker.fun/2022/07/04/ac-automata/trie_build.gif">
+<meta property="og:image" content="https://acker.fun/2022/07/04/ac-automata/trie_query.gif">
+<meta property="og:image" content="https://acker.fun/2022/07/04/ac-automata/ac_suffix_1.png">
+<meta property="article:published_time" content="2022-07-04T07:00:03.000Z">
+<meta property="article:modified_time" content="2022-07-07T16:16:46.959Z">
+<meta property="article:author" content="Acker">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://acker.fun/2022/07/04/ac-automata/trie_build.gif">
+
+
+<link rel="canonical" href="https://acker.fun/2022/07/04/ac-automata/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Aho-Corasick Automata | Acker's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Acker's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Acker's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Algorithms</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E6%A0%91"><span class="nav-number">2.</span> <span class="nav-text">字典树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AC%E8%87%AA%E5%8A%A8%E6%9C%BA"><span class="nav-number">3.</span> <span class="nav-text">AC自动机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%A4%B1%E9%85%8D%E6%8C%87%E9%92%88"><span class="nav-number">3.1.</span> <span class="nav-text">构造失配指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E8%BE%93%E5%87%BA%E6%8C%87%E9%92%88"><span class="nav-number">3.2.</span> <span class="nav-text">构造输出指针</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Acker</p>
+  <div class="site-description" itemprop="description">Codes never lie.</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://acker.fun/2022/07/04/ac-automata/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Acker">
+      <meta itemprop="description" content="Codes never lie.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Acker's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Aho-Corasick Automata
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-04 15:00:03" itemprop="dateCreated datePublished" datetime="2022-07-04T15:00:03+08:00">2022-07-04</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-07-08 00:16:46" itemprop="dateModified" datetime="2022-07-08T00:16:46+08:00">2022-07-08</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Slides02.pdf">Aho-Corasick Automata</a></p>
+</blockquote>
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><blockquote>
+<p>给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的<strong>所有？</strong>位置。</p>
+</blockquote>
+<p>暴力的解法是首先枚举文本串 $T$ 的每个位置，然后枚举每个模式串 $P_i$ ，判断 $P_i$ 是否在该位置出现，算法的时间复杂度为： $O(mn)$。</p>
+<p>下文主要介绍两种优化算法，字典树（$Trie$） 和 AC自动机（$AC-Automata$） ，为了方便描述，作如下符号定义：</p>
+<ul>
+<li>$T$：文本串</li>
+<li>$P_i$：模式串</li>
+<li>$m=|T|$：文本串的长度</li>
+<li>$k$：模式串的个数</li>
+<li>$n=|P_1|+|P_2|+ … + |P_k|$：所有模式串的总长度</li>
+<li>$L_{max}$：最长的模式串</li>
+<li>$\Sigma$：构成所有字符串的字母表</li>
+</ul>
+<h1 id="字典树"><a href="#字典树" class="headerlink" title="字典树"></a>字典树</h1><p>字典树的主要优势是可以利用公共前缀减少查询时间，首先将所有的模式串构造成一棵字典树，具体过程如下图所示：</p>
+<img src="/2022/07/04/ac-automata/trie_build.gif" class="">
+
+<p>构造时只需遍历所有的模式串，时间复杂度为：$O(n)$。</p>
+<p>然后进行匹配，首先枚举 $T$ 的每一个位置，然后在字典树中查询，过程如下图：</p>
+<img src="/2022/07/04/ac-automata/trie_query.gif" class="">
+
+<p>匹配时只会访问字典树的一条链，时间复杂度为：$O(mL_{max})$。</p>
+<p>沿用之前的表示方式：$p(m, n)$表示算法的预处理时间复杂度， $q(m, n)$：表示匹配的时间复杂度，该算法的时间复杂度表示为$&lt;O(n), O(mL_{max})&gt;$，具体代码如下：</p>
+<p><strong>代码</strong></p>
+<h1 id="AC自动机"><a href="#AC自动机" class="headerlink" title="AC自动机"></a>AC自动机</h1><p>AC自动机以字典树为结构基础，通过引入失配指针（Suffix Links）和输出指针（Output Links），来保存上下文信息，降低匹配的时间复杂度。</p>
+<p>失配指针：</p>
+<ul>
+<li>用于在匹配字符串失败时进行回退</li>
+<li>除根结点外，每个结点都有一个失配指针</li>
+<li>结点的失配指针指向它的最长后缀</li>
+<li>下文用红色边代表适配指针</li>
+</ul>
+<p>例如对于下图（为了画图方便，将字符画到了结点上而不是边上）来说，结点A代表字符串%%，它的最长前缀是%%，因此它的失配指针指向结点B。</p>
+<img src="/2022/07/04/ac-automata/ac_suffix_1.png" class="">
+
+<p>设当前匹配起点为 $i$，匹配到位置 $j$ ，无法再继续匹配，即 $T[i..j+1]$ 不在字典树中，也就是说以 $i$ 为起点无法再匹配到模式串，这时候通过失配指针跳转到新的起点，继续匹配，具体过程如下图所示。</p>
+<p><strong>图</strong></p>
+<p>可见，对于每一步：要么移动指针 $j$，要么移动指针 $i$，每个指针都最多移动 $O(m)$ 步，因此将时间复杂度从 $O(mL_{max})$ 降低到 $O(m)$。</p>
+<p>但是，该做法还存在一个问题，由于不再从文本串 $T$ 的每一个位置开始匹配，会导致遗漏，如下图所示。</p>
+<p><strong>图</strong></p>
+<p>在匹配的过程中，会有一些模式串是当前字符串的后缀，输出指针用来指向这些模式串，通过输出指针链将其正确输出。最终的算法流程如下：</p>
+<ul>
+<li>从Trie的根结点开始</li>
+<li>对于 $T$ 中的每一个字符 $c$：<ul>
+<li>如果当前节点的子节点没有 $c$:<ul>
+<li>如果当前位于根结点，结束当前循环</li>
+<li>否则，移动到失配指针指向的结点</li>
+</ul>
+</li>
+<li>如果当前节点的子节点有 $c$，移动到该结点</li>
+<li>如果当前结点对应一个模式串，输出该模式串</li>
+<li>输出当前节点的输出指针链上的所有模式串</li>
+</ul>
+</li>
+</ul>
+<h2 id="构造失配指针"><a href="#构造失配指针" class="headerlink" title="构造失配指针"></a>构造失配指针</h2><p>为了方便描述，本节所说的结点代指其所代表的字符串，例如结点 $a$ ，其中的 $a$ 表示该结点所代表的字符串。</p>
+<p>假设Trie上结点 $w$ 的失配指针指向结点 $x$，$w$ 有一子结点为 $wa$，则存在两种情况：</p>
+<ul>
+<li><p>$xa$ 存在</p>
+<p><strong>图</strong></p>
+</li>
+</ul>
+<ul>
+<li>$xa$ 不存在</li>
+</ul>
+<p>​        <strong>图</strong></p>
+<p>通过对trie进行广度优先搜索来构造 $wa$ 的失配指针：</p>
+<ul>
+<li><p>如果当前节点为根结点，则它没有失配指针</p>
+</li>
+<li><p>如果当前节点为根结点的子节点，则它的失配指针指向根结点</p>
+</li>
+<li><p>否则，设该结点为 $wa$，$x$ 为 $w$ 的失配指针指向的结点：</p>
+<ul>
+<li><p>如果 $xa$ 存在，则将 $wa$ 的失配指针指向 $xa$</p>
+</li>
+<li><p>否则，如果x是根结点，将 $wa$ 的失配指针指向根结点</p>
+</li>
+<li><p>否则，将 $x$ 设为 $x$ 的失配指针所指的结点，并重复上述步骤</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="构造输出指针"><a href="#构造输出指针" class="headerlink" title="构造输出指针"></a>构造输出指针</h2><p>具体算法如下：</p>
+<ul>
+<li>首先将所有结点的输出指针设为<code>null</code></li>
+<li>当在进行广度优先搜索构造失配指针的同时，按如下方式构造当前节点 $v$ 的输出指针：<ul>
+<li>设 $u$ 为 $v$ 的失配指针指向的结点</li>
+<li>如果 $u$ 对应一个模式串，则 $v$ 的输出指针指向 $u$</li>
+<li>否则，将 $v$ 的输出指针指向 $u$ 的输出指针指向的结点</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/01/29/rmq2/" rel="prev" title="Range Minimum Queries(Part Two)">
+                  <i class="fa fa-chevron-left"></i> Range Minimum Queries(Part Two)
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Acker</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+
+  
+
+  
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'e01110cf0b8f2c1e3d39',
+      clientSecret: '81bd000c30fe5c9d9c942eb6d6c76ab9fd72e6fa',
+      repo        : 'Ackeraa.github.io',
+      owner       : 'Ackeraa',
+      admin       : ['Ackeraa'],
+      id          : 'b1198498535a1bb2fc85fd0cc9a7588e',
+	  proxy       : 'https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
