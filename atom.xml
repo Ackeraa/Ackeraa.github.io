@@ -6,7 +6,7 @@
   <link href="https://acker.fun/atom.xml" rel="self"/>
   
   <link href="https://acker.fun/"/>
-  <updated>2022-07-28T14:05:17.930Z</updated>
+  <updated>2022-09-20T06:41:18.958Z</updated>
   <id>https://acker.fun/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>SuffixTrees</title>
+    <title>Do Not F**king Call Me</title>
+    <link href="https://acker.fun/2022/09/19/dnfcm/"/>
+    <id>https://acker.fun/2022/09/19/dnfcm/</id>
+    <published>2022-09-19T08:29:05.000Z</published>
+    <updated>2022-09-20T06:41:18.958Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在程序设计中，我特别喜欢一个叫作 “控制反转”(Inversion of Control)的设计原则，我的理解是：你不要联系我(Don’t Call Me)，我会在合适的时候主动联系你(I Will Call</summary>
+        
+      
+    
+    
+    
+    <category term="有趣的事" scheme="https://acker.fun/categories/%E6%9C%89%E8%B6%A3%E7%9A%84%E4%BA%8B/"/>
+    
+    
+    <category term="脚本" scheme="https://acker.fun/tags/%E8%84%9A%E6%9C%AC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Suffix Trees &amp; Suffix Array</title>
     <link href="https://acker.fun/2022/07/28/suffixtrees/"/>
     <id>https://acker.fun/2022/07/28/suffixtrees/</id>
     <published>2022-07-28T14:03:54.000Z</published>
-    <updated>2022-07-28T14:05:17.930Z</updated>
+    <updated>2022-09-19T08:29:22.459Z</updated>
     
     
       

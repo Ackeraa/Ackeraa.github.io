@@ -534,18 +534,181 @@
       </tags>
   </entry>
   <entry>
-    <title>SuffixTrees</title>
+    <title>Suffix Trees &amp; Suffix Array</title>
     <url>/2022/07/28/suffixtrees/</url>
     <content><![CDATA[<blockquote>
-<p>本文参考自斯坦福大学数据结构课程 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Slides02.pdf">Aho-Corasick Automata</a></p>
+<p>本文参考自斯坦福大学数据结构课程 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/03/Slides03.pdf">Suffix Trees</a>, <a href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/04/Slides04.pdf">Suffix Array</a></p>
 </blockquote>
-<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1>]]></content>
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><blockquote>
+<ol>
+<li>给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$ 和长度为 $n$ 的模式串 $P$， 找出所有前缀为 $P$ 的文本串。</li>
+</ol>
+</blockquote>
+<h2 id="字典树"><a href="#字典树" class="headerlink" title="字典树"></a>字典树</h2><p>使用 <em>AC-Automata</em> 中提到的字典树：</p>
+<ul>
+<li>构建所有文本串的字典树</li>
+<li>从根节点开始匹配 $P$</li>
+<li>若匹配失败则没有前缀为的文本串</li>
+<li>否则从匹配的最后一个节点开始作DFS，找出所有文本串</li>
+</ul>
+<p><em>图</em></p>
+<p>时间复杂度为：</p>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<h2 id="压缩字典树"><a href="#压缩字典树" class="headerlink" title="压缩字典树"></a>压缩字典树</h2><p>压缩字典树是一种更节省空间的字典树，其中作为唯一子节点的节点都与其父节点合并，如下图：</p>
+<p><em>图</em></p>
+<p>其中 <code>$ </code> 为终止符。</p>
+<p>$k$ 个单词构成的压缩字典树有 $O(k)$ 个节点，证明如下：首先删除树中的内部节点， 剩下 $k$ 个由单个叶子节点构成的簇，然后每次增加一个叶子结点，可至少减少一个簇（每个内部节点至少有两个子节点），因此最多能增加 $k$ 个内部节点。</p>
+<p><em>图</em></p>
+<p>时间复杂度：</p>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<h2 id="后缀树"><a href="#后缀树" class="headerlink" title="后缀树"></a>后缀树</h2><p>字符串 $T$ 的后缀树是由 $T$$ 的所有后缀构成的压缩字典树，如下图：</p>
+<p><em>图</em></p>
+<blockquote>
+<ol start="2">
+<li>给定长度为 $m$ 的文本串 $T$ ，找出模式串 $P$ 出现的所有位置。</li>
+</ol>
+</blockquote>
+<p>如果 $P$ 是 $T$ 的子串，则 $P$ 应是 $T$ 的某一个后缀的前缀，可构造字符串 $T$ 的后缀树，构造完成后，便可使用上述压缩字典树的搜索算法：</p>
+<ul>
+<li>首先从根节点开始匹配模式串，时间复杂度：$O(n)$</li>
+<li>匹配成功后，$O(z)$ 找出所有匹配</li>
+</ul>
+<blockquote>
+<ol start="3">
+<li>给定长度为 $m$ 的文本串 $T$，找出 $T$ 的最长重复子串。</li>
+</ol>
+</blockquote>
+<p>后缀树中的内节点有特殊的含义：其所代表的字符串在文本串 $T$ 中至少出现两次。因此，只需：</p>
+<ul>
+<li>在后缀树上DFS</li>
+<li>找到所代表字符串最长的内节点</li>
+</ul>
+<p>如果直接构造后缀树需要 $\Theta (m^2)$的时间复杂度，可使用后缀数组来优化。</p>
+<h2 id="后缀数组"><a href="#后缀数组" class="headerlink" title="后缀数组"></a>后缀数组</h2><p>字符串 $T$ 的后缀数组是由 $T$$ 的后缀构成的有序数组，通常只需存储下标，如下图：</p>
+<p><em>图</em></p>
+<p>对于上节中的问题2， 所有的匹配位置在后缀数组中应该是连续的，因此，只需在后缀数组中进行二分查找即可，时间复杂度为：</p>
+<ul>
+<li>二分查找找出第一个匹配位置：$O(n\log m)$</li>
+<li>找出所有匹配：$O(z)$</li>
+<li>总时间复杂度： $O(n\log m + z)$</li>
+</ul>
+<p>后缀数组与后缀树的联系：</p>
+<ul>
+<li>后缀数组可通过在后缀树上作有序DFS构建</li>
+<li>后缀数组中拥有公共前缀的两个后缀（串）在后缀树中有公共父节点</li>
+<li>后缀 $x$ 和后缀 $y$ 的最近公公祖先代表的字符串是 $x$ 和 $y$ 的最长公共前缀 $LCP(x, y)$</li>
+</ul>
+<p><em>图 \</em> 2*</p>
+<h2 id="计算-LCP"><a href="#计算-LCP" class="headerlink" title="计算 $LCP$"></a>计算 $LCP$</h2><p>给定后缀数组 $SA$，可在 $O(m)$ 时间内计算相邻后缀的LCP数组：$H[i]=LCP(SA[i], SA[i+1])$</p>
+<p>具体的算法流程如下：</p>
+<p>$LCP(SA[i], SA[j]) = RMQ_H(i, j - 1)$</p>
+]]></content>
       <categories>
         <category>数据结构</category>
       </categories>
       <tags>
         <tag>数据结构</tag>
         <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Do Not F**king Call Me</title>
+    <url>/2022/09/19/dnfcm/</url>
+    <content><![CDATA[<p>在程序设计中，我特别喜欢一个叫作 “控制反转”(Inversion of Control)的设计原则，我的理解是：你不要联系我(Don’t Call Me)，我会在合适的时候主动联系你(I Will Call You)，告诉你该做什么。也就是说，我拥有完全的控制权。</p>
+<hr>
+<p>所以，我肯定不能允许这些东西的出现</p>
+<img src="/2022/09/19/dnfcm/1.png" class="">
+
+<img src="/2022/09/19/dnfcm/3.png" class="">
+
+<p>此前很长的一段时间内，我关闭了除电话、短信、微信外的所有通知权限，直到我换了一张手机卡</p>
+<img src="/2022/09/19/dnfcm/2.png" class="">
+
+<p>终于找到机会对短信动手了！</p>
+<p>本来想把不想接收的信息来源拉入黑名单，一劳永逸 ，但会有两个问题：</p>
+<ul>
+<li>垃圾信息源源不断，需要不断更新黑名单</li>
+<li>有些来源偶尔会发些有用的通知（比如欠费通知），不能进入黑名单</li>
+</ul>
+<p>仔细一想，只有两种信息对我来说是必要的：外卖和快递，我只需要让手机在收到这两种信息的时候通知我，其它信息你发你的，不通知我就是了。</p>
+<p>于是便用到了快捷指令这个好东西，可以让手机执行一些自动化的指令。首先我关闭信息的所有通知权限，然后定义自动化任务：</p>
+<ul>
+<li>当我收到包含“外卖柜”的信息时</li>
+<li>从信息中获取取件网址</li>
+<li>打开网址</li>
+</ul>
+<img src="/2022/09/19/dnfcm/4.png" class=""> 
+
+<p><strong>虽然很简单，但是很有用。</strong></p>
+<p>这样，在有外卖信息时，该快捷指令会发送通知，等我走到外卖柜前，点一下运行就跳转到开柜地址，最后点击开柜，很丝滑～～</p>
+<p>对于快递，只需要将快递信息添加到提醒事项，然后定时提醒取快递。对于其它信息，你发就发吧，等我心情好的时候就去看两眼。</p>
+<p>终于又少了一项通知来源，垃圾信息，滚啊</p>
+<hr>
+<p><strong>然而，我会止步于此吗？</strong></p>
+<p>这个信息化的社会已经变得很复杂，有些时候，手机并没有带来方便。每天扫这个码，签那个到，我是个懒人，能点一下绝对不点两下，最好能不点。既然接触到了快捷指令这个好东西，就得让它充分发挥作用，于是，又搞了一些：</p>
+<ul>
+<li>打开微信扫码</li>
+<li>打开支付宝扫码</li>
+<li>打开健康码</li>
+<li>切换WIFI/流量</li>
+<li>翻译剪切板</li>
+<li>定期自动清理截屏</li>
+<li>记录灵感</li>
+<li>钉钉自动打卡</li>
+</ul>
+<p><strong>虽然很简单，但是很方便。</strong></p>
+<hr>
+<p><strong>然而，我会止步于此吗？</strong></p>
+<p>我们每天频繁地在各个新闻、资讯、娱乐类的App之间游荡，而这些垃圾根据用户的个人偏好，一边收集隐私数据，一边编织信息茧房，一边推送广告（充会员都他妈的避免不了）。</p>
+<img src="/2022/09/19/dnfcm/5.png" class=""> 
+
+<p>而我不需要个性化的推荐，不想看到广告，不想点来点去，我只想在我想的时候了解客观世界发生的客观事实。有没有一种可能，我只需要点一下，就一下，就能阅读到我想要了解的有用信息呢？</p>
+<p>不如，写一（几）个脚本吧！</p>
+<p>兵马未动，粮草先行，我要把脚本部署到哪里运行呢？</p>
+<ul>
+<li>若放在自己电脑上，不稳定，不能持续周期性地运行</li>
+<li><del>若放在服务器上，哦，没钱买服务器</del></li>
+</ul>
+<p>贫穷的人更要勇敢探索，幸好我又发现了另外一个好东西 <a href="https://docs.github.com/cn/actions">Github Action</a> ，可以当作免费的服务器使用。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">&#x27;report&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">schedule:</span>  <span class="comment"># UTC+8</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">cron:</span> <span class="string">&#x27;0 22 * * *&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">cron:</span> <span class="string">&#x27;0 3 * * *&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">cron:</span> <span class="string">&#x27;0 9 * * *&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">cron:</span> <span class="string">&#x27;0 15 * * *&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">get_report:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">checkout</span> <span class="string">code</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">actions/checkout@v2</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">set</span> <span class="string">morning</span> <span class="string">as</span> <span class="string">default</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">          <span class="string">echo</span> <span class="string">&quot;time=morning&quot;</span> <span class="string">&gt;&gt;</span> <span class="string">$GITHUB_ENV</span></span><br><span class="line">          </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">set</span> <span class="string">noon</span></span><br><span class="line">        <span class="attr">if:</span> <span class="string">github.event.schedule</span> <span class="string">==</span> <span class="string">&#x27;0 3 * * *&#x27;</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">          <span class="string">echo</span> <span class="string">&quot;time=noon&quot;</span> <span class="string">&gt;&gt;</span> <span class="string">$GITHUB_ENV</span></span><br><span class="line">          </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">set</span> <span class="string">night</span></span><br><span class="line">        <span class="attr">if:</span> <span class="string">github.event.schedule</span> <span class="string">==</span> <span class="string">&#x27;0 9 * * *&#x27;</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">          <span class="string">echo</span> <span class="string">&quot;time=night&quot;</span> <span class="string">&gt;&gt;</span> <span class="string">$GITHUB_ENV</span></span><br><span class="line">          </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">set</span> <span class="string">midnight</span></span><br><span class="line">        <span class="attr">if:</span> <span class="string">github.event.schedule</span> <span class="string">==</span> <span class="string">&#x27;0 15 * * *&#x27;</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line">          <span class="string">echo</span> <span class="string">&quot;time=midnight&quot;</span> <span class="string">&gt;&gt;</span> <span class="string">$GITHUB_ENV</span></span><br><span class="line">          </span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">get</span> <span class="string">report</span></span><br><span class="line">        <span class="attr">run:</span> <span class="string">bash</span> <span class="string">./reporter.sh</span> <span class="string">$time</span></span><br><span class="line">        <span class="attr">env:</span></span><br><span class="line">          <span class="attr">LOCATION:</span> <span class="string">$&#123;&#123;secrets.LOCATION&#125;&#125;</span></span><br><span class="line">          <span class="attr">GITHUB_USERNAME:</span> <span class="string">$&#123;&#123;secrets.GITHUB_USERNAME&#125;&#125;</span></span><br><span class="line">          <span class="attr">SIGN:</span> <span class="string">$&#123;&#123;secrets.SIGN&#125;&#125;</span></span><br><span class="line">          <span class="attr">POCKET_CONSUMER_KEY:</span> <span class="string">$&#123;&#123;secrets.POCKET_CONSUMER_KEY&#125;&#125;</span></span><br><span class="line">          <span class="attr">POCKET_ACCESS_TOKEN:</span> <span class="string">$&#123;&#123;secrets.POCKET_ACCESS_TOKEN&#125;&#125;</span></span><br><span class="line"></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">send</span> <span class="string">email</span></span><br><span class="line">        <span class="attr">uses:</span> <span class="string">dawidd6/action-send-mail@master</span></span><br><span class="line">        <span class="attr">with:</span></span><br><span class="line">          <span class="attr">server_address:</span> <span class="string">smtp.163.com</span></span><br><span class="line">          <span class="attr">server_port:</span> <span class="number">465</span></span><br><span class="line">          <span class="attr">username:</span> <span class="string">$&#123;&#123;secrets.MAIL_USERNAME&#125;&#125;</span></span><br><span class="line">          <span class="attr">password:</span> <span class="string">$&#123;&#123;secrets.MAIL_PASSWORD&#125;&#125;</span></span><br><span class="line">          <span class="attr">subject:</span> <span class="string">Autor</span></span><br><span class="line">          <span class="attr">html_body:</span> <span class="string">file://rst.html</span></span><br><span class="line">          <span class="attr">to:</span> <span class="string">$&#123;&#123;secrets.MAIL_USERNAME&#125;&#125;</span></span><br><span class="line">          <span class="attr">from:</span> <span class="string">Autor</span></span><br></pre></td></tr></table></figure>
+
+<p>上面便是我的<code>workflow</code> ，会在每天6:00、11:00、17:00、23:00执行<code>report.sh</code>，获取在这个时间我想要了解的信息，并以电子邮件的形式发送给我（不通知）。</p>
+<p>主要的信息来源是一些RSS订阅，当然还包括一些有趣的东西，比如我会在早上收到：</p>
+<ul>
+<li><p>一句天气预报</p>
+</li>
+<li><p><del>一个英语单词</del></p>
+</li>
+<li><p>今天的运势</p>
+</li>
+<li><p>新闻及博客订阅</p>
+</li>
+</ul>
+<p>会在睡觉前收到：</p>
+<ul>
+<li>今天的 Read Later（来自Pocket）</li>
+<li>今天的Github代码提交记录</li>
+<li>新闻及博客订阅</li>
+</ul>
+<img src="/2022/09/19/dnfcm/6.png" class="">
+
+<p><strong>虽然不简单，但是有用又方便。</strong></p>
+<hr>
+<p>折腾了一周，就当留个记录。</p>
+<p><strong>然而，我会止步于此吗？</strong></p>
+<p><em>要革命就得一革到底，一张手机卡引发的血案或许还在继续！！！</em></p>
+]]></content>
+      <categories>
+        <category>有趣的事</category>
+      </categories>
+      <tags>
+        <tag>脚本</tag>
       </tags>
   </entry>
 </search>

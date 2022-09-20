@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"acker.fun","root":"/","scheme":"Mist","version":"8.0.1","exturl":false,"sidebar":{"position":"right","width":300,"display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta name="description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Aho-Corasick Automata  问题描述">
+  <meta name="description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Suffix Trees, Suffix Array  问题描述  给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$ 和长度为 $n$ 的模式串 $P$， 找出所有前缀为 $P$ 的文本串。   字典树使用 AC-Automata 中提到的字典树：  构建所有文本串的字典树 从根节点开始匹配 $P$ 若匹配失败则没">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SuffixTrees">
+<meta property="og:title" content="Suffix Trees &amp; Suffix Array">
 <meta property="og:url" content="https://acker.fun/2022/07/28/suffixtrees/index.html">
 <meta property="og:site_name" content="Acker&#39;s Blog">
-<meta property="og:description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Aho-Corasick Automata  问题描述">
+<meta property="og:description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Suffix Trees, Suffix Array  问题描述  给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$ 和长度为 $n$ 的模式串 $P$， 找出所有前缀为 $P$ 的文本串。   字典树使用 AC-Automata 中提到的字典树：  构建所有文本串的字典树 从根节点开始匹配 $P$ 若匹配失败则没">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-07-28T14:03:54.000Z">
-<meta property="article:modified_time" content="2022-07-28T14:05:17.930Z">
+<meta property="article:modified_time" content="2022-09-19T08:29:22.459Z">
 <meta property="article:author" content="Acker">
 <meta property="article:tag" content="数据结构">
 <meta property="article:tag" content="python">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>SuffixTrees | Acker's Blog</title>
+  <title>Suffix Trees & Suffix Array | Acker's Blog</title>
   
 
 
@@ -207,7 +207,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E5%85%B8%E6%A0%91"><span class="nav-number">1.1.</span> <span class="nav-text">字典树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%AD%97%E5%85%B8%E6%A0%91"><span class="nav-number">1.2.</span> <span class="nav-text">压缩字典树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BC%80%E6%A0%91"><span class="nav-number">1.3.</span> <span class="nav-text">后缀树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BC%80%E6%95%B0%E7%BB%84"><span class="nav-number">1.4.</span> <span class="nav-text">后缀数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97-LCP"><span class="nav-number">1.5.</span> <span class="nav-text">计算 $LCP$</span></a></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -221,19 +221,19 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -286,7 +286,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          SuffixTrees
+          Suffix Trees & Suffix Array
         </h1>
 
         <div class="post-meta-container">
@@ -296,10 +296,16 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-07-28 22:03:54 / 修改时间：22:05:17" itemprop="dateCreated datePublished" datetime="2022-07-28T22:03:54+08:00">2022-07-28</time>
+      <time title="创建时间：2022-07-28 22:03:54" itemprop="dateCreated datePublished" datetime="2022-07-28T22:03:54+08:00">2022-07-28</time>
     </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2022-09-19 16:29:22" itemprop="dateModified" datetime="2022-09-19T16:29:22+08:00">2022-09-19</time>
+      </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-folder"></i>
@@ -328,9 +334,78 @@
     
     <div class="post-body" itemprop="articleBody">
         <blockquote>
-<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Slides02.pdf">Aho-Corasick Automata</a></p>
+<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/03/Slides03.pdf">Suffix Trees</a>, <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/04/Slides04.pdf">Suffix Array</a></p>
 </blockquote>
-<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1>
+<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><blockquote>
+<ol>
+<li>给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$ 和长度为 $n$ 的模式串 $P$， 找出所有前缀为 $P$ 的文本串。</li>
+</ol>
+</blockquote>
+<h2 id="字典树"><a href="#字典树" class="headerlink" title="字典树"></a>字典树</h2><p>使用 <em>AC-Automata</em> 中提到的字典树：</p>
+<ul>
+<li>构建所有文本串的字典树</li>
+<li>从根节点开始匹配 $P$</li>
+<li>若匹配失败则没有前缀为的文本串</li>
+<li>否则从匹配的最后一个节点开始作DFS，找出所有文本串</li>
+</ul>
+<p><em>图</em></p>
+<p>时间复杂度为：</p>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<h2 id="压缩字典树"><a href="#压缩字典树" class="headerlink" title="压缩字典树"></a>压缩字典树</h2><p>压缩字典树是一种更节省空间的字典树，其中作为唯一子节点的节点都与其父节点合并，如下图：</p>
+<p><em>图</em></p>
+<p>其中 <code>$ </code> 为终止符。</p>
+<p>$k$ 个单词构成的压缩字典树有 $O(k)$ 个节点，证明如下：首先删除树中的内部节点， 剩下 $k$ 个由单个叶子节点构成的簇，然后每次增加一个叶子结点，可至少减少一个簇（每个内部节点至少有两个子节点），因此最多能增加 $k$ 个内部节点。</p>
+<p><em>图</em></p>
+<p>时间复杂度：</p>
+<ul>
+<li></li>
+<li></li>
+</ul>
+<h2 id="后缀树"><a href="#后缀树" class="headerlink" title="后缀树"></a>后缀树</h2><p>字符串 $T$ 的后缀树是由 $T$$ 的所有后缀构成的压缩字典树，如下图：</p>
+<p><em>图</em></p>
+<blockquote>
+<ol start="2">
+<li>给定长度为 $m$ 的文本串 $T$ ，找出模式串 $P$ 出现的所有位置。</li>
+</ol>
+</blockquote>
+<p>如果 $P$ 是 $T$ 的子串，则 $P$ 应是 $T$ 的某一个后缀的前缀，可构造字符串 $T$ 的后缀树，构造完成后，便可使用上述压缩字典树的搜索算法：</p>
+<ul>
+<li>首先从根节点开始匹配模式串，时间复杂度：$O(n)$</li>
+<li>匹配成功后，$O(z)$ 找出所有匹配</li>
+</ul>
+<blockquote>
+<ol start="3">
+<li>给定长度为 $m$ 的文本串 $T$，找出 $T$ 的最长重复子串。</li>
+</ol>
+</blockquote>
+<p>后缀树中的内节点有特殊的含义：其所代表的字符串在文本串 $T$ 中至少出现两次。因此，只需：</p>
+<ul>
+<li>在后缀树上DFS</li>
+<li>找到所代表字符串最长的内节点</li>
+</ul>
+<p>如果直接构造后缀树需要 $\Theta (m^2)$的时间复杂度，可使用后缀数组来优化。</p>
+<h2 id="后缀数组"><a href="#后缀数组" class="headerlink" title="后缀数组"></a>后缀数组</h2><p>字符串 $T$ 的后缀数组是由 $T$$ 的后缀构成的有序数组，通常只需存储下标，如下图：</p>
+<p><em>图</em></p>
+<p>对于上节中的问题2， 所有的匹配位置在后缀数组中应该是连续的，因此，只需在后缀数组中进行二分查找即可，时间复杂度为：</p>
+<ul>
+<li>二分查找找出第一个匹配位置：$O(n\log m)$</li>
+<li>找出所有匹配：$O(z)$</li>
+<li>总时间复杂度： $O(n\log m + z)$</li>
+</ul>
+<p>后缀数组与后缀树的联系：</p>
+<ul>
+<li>后缀数组可通过在后缀树上作有序DFS构建</li>
+<li>后缀数组中拥有公共前缀的两个后缀（串）在后缀树中有公共父节点</li>
+<li>后缀 $x$ 和后缀 $y$ 的最近公公祖先代表的字符串是 $x$ 和 $y$ 的最长公共前缀 $LCP(x, y)$</li>
+</ul>
+<p><em>图 \</em> 2*</p>
+<h2 id="计算-LCP"><a href="#计算-LCP" class="headerlink" title="计算 $LCP$"></a>计算 $LCP$</h2><p>给定后缀数组 $SA$，可在 $O(m)$ 时间内计算相邻后缀的LCP数组：$H[i]=LCP(SA[i], SA[i+1])$</p>
+<p>具体的算法流程如下：</p>
+<p>$LCP(SA[i], SA[j]) = RMQ_H(i, j - 1)$</p>
+
     </div>
 
     
@@ -352,6 +427,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2022/09/19/dnfcm/" rel="next" title="Do Not F**king Call Me">
+                  Do Not F**king Call Me <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
