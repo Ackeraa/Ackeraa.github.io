@@ -445,7 +445,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/07/28/suffixtrees/" class="post-title-link" itemprop="url">Suffix Trees & Suffix Array</a>
+            <a href="/2022/07/28/suffixtrees/" class="post-title-link" itemprop="url">Suffix Array & Suffix Tree</a>
         </h2>
 
         <div class="post-meta-container">
@@ -463,7 +463,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-09-19 16:29:22" itemprop="dateModified" datetime="2022-09-19T16:29:22+08:00">2022-09-19</time>
+        <time title="修改时间：2022-10-22 16:58:41" itemprop="dateModified" datetime="2022-10-22T16:58:41+08:00">2022-10-22</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -485,42 +485,42 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/03/Slides03.pdf">Suffix Trees</a>, <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/04/Slides04.pdf">Suffix Array</a></p>
-</blockquote>
-<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><blockquote>
+          <h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><blockquote>
 <ol>
 <li>给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$ 和长度为 $n$ 的模式串 $P$， 找出所有前缀为 $P$ 的文本串。</li>
+<li>给定长度为 $m$ 的文本串 $T$ ，找出模式串 $P$ 出现的所有位置。</li>
+<li>给定长度为 $m$ 的文本串 $T$，找出 $T$ 的最长重复子串。</li>
 </ol>
 </blockquote>
-<h2 id="字典树"><a href="#字典树" class="headerlink" title="字典树"></a>字典树</h2><p>使用 <em>AC-Automata</em> 中提到的字典树：</p>
+<h1 id="字典树"><a href="#字典树" class="headerlink" title="字典树"></a>字典树</h1><p>使用 <em>AC-Automata</em> 中提到的字典树：</p>
 <ul>
 <li>构建所有文本串的字典树</li>
 <li>从根节点开始匹配 $P$</li>
 <li>若匹配失败则没有前缀为的文本串</li>
-<li>否则从匹配的最后一个节点开始作DFS，找出所有文本串</li>
+<li>否则从匹配到的最后一个节点开始DFS，找出所有文本串</li>
 </ul>
-<p><em>图</em></p>
+<img src="/2022/07/28/suffixtrees/1.gif" class="">
+
+<img src="/2022/07/28/suffixtrees/2.gif" class="">
+
 <p>时间复杂度为：</p>
 <ul>
-<li></li>
-<li></li>
+<li>构造字典树：$O(m)$</li>
+<li>匹配：$O(n)$</li>
+<li>DFS找出所有文本串：$O(m)$</li>
+<li>总时间复杂度：$&lt;O(m), O(n+m)$&gt;</li>
 </ul>
-<h2 id="压缩字典树"><a href="#压缩字典树" class="headerlink" title="压缩字典树"></a>压缩字典树</h2><p>压缩字典树是一种更节省空间的字典树，其中作为唯一子节点的节点都与其父节点合并，如下图：</p>
-<p><em>图</em></p>
+<h1 id="压缩字典树"><a href="#压缩字典树" class="headerlink" title="压缩字典树"></a>压缩字典树</h1><p>如果我们只想找出文本串的ID，可使用压缩字典树来降低上述DFS的时间复杂度，相较于字典树，其中的作为唯一子节点的节点都与其父节点合并，如下图：</p>
+
+
 <p>其中 <code>$ </code> 为终止符。</p>
 <p>$k$ 个单词构成的压缩字典树有 $O(k)$ 个节点，证明如下：首先删除树中的内部节点， 剩下 $k$ 个由单个叶子节点构成的簇，然后每次增加一个叶子结点，可至少减少一个簇（每个内部节点至少有两个子节点），因此最多能增加 $k$ 个内部节点。</p>
-<p><em>图</em></p>
-<p>时间复杂度：</p>
-<ul>
-<li></li>
-<li></li>
-</ul>
-<h2 id="后缀树"><a href="#后缀树" class="headerlink" title="后缀树"></a>后缀树</h2><p>字符串 $T$ 的后缀树是由 $T$$ 的所有后缀构成的压缩字典树，如下图：</p>
+<p>故其时间复杂度降为：$&lt;O(m), O(n+z)$&gt;（$z$ 为匹配的文本串个数）</p>
+<h1 id="后缀树"><a href="#后缀树" class="headerlink" title="后缀树"></a>后缀树</h1><p>字符串 $T$ 的后缀树是由 $T$$ 的所有后缀构成的压缩字典树，如下图：</p>
 <p><em>图</em></p>
 <blockquote>
 <ol start="2">
-<li>给定长度为 $m$ 的文本串 $T$ ，找出模式串 $P$ 出现的所有位置。</li>
+<li></li>
 </ol>
 </blockquote>
 <p>如果 $P$ 是 $T$ 的子串，则 $P$ 应是 $T$ 的某一个后缀的前缀，可构造字符串 $T$ 的后缀树，构造完成后，便可使用上述压缩字典树的搜索算法：</p>
@@ -530,7 +530,7 @@
 </ul>
 <blockquote>
 <ol start="3">
-<li>给定长度为 $m$ 的文本串 $T$，找出 $T$ 的最长重复子串。</li>
+<li></li>
 </ol>
 </blockquote>
 <p>后缀树中的内节点有特殊的含义：其所代表的字符串在文本串 $T$ 中至少出现两次。因此，只需：</p>
@@ -539,7 +539,7 @@
 <li>找到所代表字符串最长的内节点</li>
 </ul>
 <p>如果直接构造后缀树需要 $\Theta (m^2)$的时间复杂度，可使用后缀数组来优化。</p>
-<h2 id="后缀数组"><a href="#后缀数组" class="headerlink" title="后缀数组"></a>后缀数组</h2><p>字符串 $T$ 的后缀数组是由 $T$$ 的后缀构成的有序数组，通常只需存储下标，如下图：</p>
+<h1 id="后缀数组"><a href="#后缀数组" class="headerlink" title="后缀数组"></a>后缀数组</h1><p>字符串 $T$ 的后缀数组是由 $T$$ 的后缀构成的有序数组，通常只需存储下标，如下图：</p>
 <p><em>图</em></p>
 <p>对于上节中的问题2， 所有的匹配位置在后缀数组中应该是连续的，因此，只需在后缀数组中进行二分查找即可，时间复杂度为：</p>
 <ul>
@@ -554,9 +554,49 @@
 <li>后缀 $x$ 和后缀 $y$ 的最近公公祖先代表的字符串是 $x$ 和 $y$ 的最长公共前缀 $LCP(x, y)$</li>
 </ul>
 <p><em>图 \</em> 2*</p>
+<p>构造后缀数组最简单、最快的一个方法是DC3（Difference Cover modulo 3），首先作如下定义：</p>
+<ul>
+<li><p>字符集为：$0, 1, 2, …, |\Sigma|-1$</p>
+</li>
+<li><p>$T_k$ 为 $T$ 中所有下标等于 $k\ mod\ 3$ ($k \epsilon{0, 1, 2}$)的位置</p>
+</li>
+</ul>
+<p>算法整体流程如下：</p>
+<ul>
+<li><em>Step 1</em>: 递归生成 $T_1$ 和 $T_2$ 中所有后缀的有序序列</li>
+<li><em>Step 2</em>: 利用上述信息生成 $T_0$ 中后缀的有序序列</li>
+<li><em>Step 3</em>: 合并两个有序序列生成最终后缀数组</li>
+</ul>
+<h2 id="Step-1"><a href="#Step-1" class="headerlink" title="Step 1"></a>Step 1</h2><p>该步骤的目标是对 $T_1$ 和 $T_2$ 中所有后缀排序，整体流程如下：</p>
+<ul>
+<li>将 $T_1$ 和 $T_2$ 中所有后缀构造成一个新的字符串</li>
+<li>递归生成新字符串的后缀数组</li>
+<li>利用生成的后缀数组来推断 $T_1$ 和 $T_2$ 中所有后缀的次序</li>
+</ul>
+<p>分别丢掉 $T$ 的前1个和前2个字符，并在末尾添加 $$$ ，生成两个新的字符串，并将它们首位相连，如下图所示：</p>
+<p><em>图</em></p>
+<p>将合并后的字符串分成长度为3的块，并以块为单元进行基数排序，得到每一块的排名，用该排名代替块，生成新字符串，如下图所示：</p>
+<p><em>图</em></p>
+<p>递归计算新字符串的后缀数组，如下图：</p>
+<p>利用每一块的排名信息可以得到 $T_1$ 和 $T_2$ 中所有后缀的次序，如下图所示：</p>
+<p><em>图</em></p>
+<h2 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h2><p>在得到了 $T_1$ 和 $T_2$ 中所有后缀的相对次序后，可以进一步得到 $T_0$ 中后缀的相对次序，算法流程如下：</p>
+<ul>
+<li>对于中的每个位置，与其后面的字符生成一个字符对</li>
+<li>对字符对进行基数排序</li>
+</ul>
+<p><em>图</em></p>
+<h2 id="Step-3"><a href="#Step-3" class="headerlink" title="Step 3"></a>Step 3</h2><p>至此，已经有两个有序序列，需要将其合并，算法流程如下：</p>
+<p>如下图：</p>
+<p><em>图</em></p>
 <h2 id="计算-LCP"><a href="#计算-LCP" class="headerlink" title="计算 $LCP$"></a>计算 $LCP$</h2><p>给定后缀数组 $SA$，可在 $O(m)$ 时间内计算相邻后缀的LCP数组：$H[i]=LCP(SA[i], SA[i+1])$</p>
 <p>具体的算法流程如下：</p>
 <p>$LCP(SA[i], SA[j]) = RMQ_H(i, j - 1)$</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ul>
+<li><p>斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/03/Slides03.pdf">Suffix Trees</a>, <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/04/Slides04.pdf">Suffix Array</a></p>
+</li>
+<li></li>
+</ul>
 
       
     </div>

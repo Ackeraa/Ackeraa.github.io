@@ -42,19 +42,20 @@
   </entry>
   
   <entry>
-    <title>Suffix Trees &amp; Suffix Array</title>
+    <title>Suffix Array &amp; Suffix Tree</title>
     <link href="https://acker.fun/2022/07/28/suffixtrees/"/>
     <id>https://acker.fun/2022/07/28/suffixtrees/</id>
     <published>2022-07-28T14:03:54.000Z</published>
-    <updated>2022-09-19T08:29:22.459Z</updated>
+    <updated>2022-10-22T08:58:41.274Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;本文参考自斯坦福大学数据结构课程 &lt;a href=&quot;http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/&quot;&gt;CS166&lt;/a&gt; 的 &lt;a</summary>
+    <summary type="html">&lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$</summary>
         
       
     
