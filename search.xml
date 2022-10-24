@@ -625,7 +625,7 @@
 </tr>
 <tr>
 <td align="center">$R_{12}$</td>
-<td align="center">辅助数组，记录 $T_{12}$ 中元素的排名，$R_{12}[SA_{12}[i]]=i$</td>
+<td align="center">辅助数组，记录 $T_{12}$ 中元素的排名，$R_{12}[SA_{12}[i]]=i+1$（0作为终止字符，所以从1开始排名）</td>
 </tr>
 <tr>
 <td align="center">$SA$</td>
@@ -633,10 +633,10 @@
 </tr>
 <tr>
 <td align="center">$R$</td>
-<td align="center">辅助数组，记录 $T$ 的每个后缀 $T[i..m](0\leq i \lt m)$ 的排名，$R[SA[i]]=i$</td>
+<td align="center">辅助数组，记录 $T$ 的每个后缀 $T[i..m](0\leq i \lt m)$ 的排名，$R[SA[i]]=i+1$</td>
 </tr>
 </tbody></table>
-<p>设字符集为：$0, 1, 2, …, |\Sigma|-1$，将 $T=abcabcacab$ 映射为整数（并在其后添加3个0以方便处理边界），相关符号的具体实例如下图：</p>
+<p>设字符集为：$0, 1, 2, …, |\Sigma|-1$，将 $T=abcabcacab$ 映射为正整数（并在其后添加3个0作为终止字符以方便处理边界），相关符号的具体实例如下图：</p>
 <img src="/2022/07/28/suffixtrees/6.png" class="">
 
 <p>调用如下<em>GetSA(T)</em> 便可构造最终的 $SA$ 数组。</p>
@@ -651,13 +651,16 @@
 
 <p>$T_{12}$ 中每个元素 $T_{12}[i]$ 代表的是以之为起点的后缀串 $T[T_{12}[i]..m]$，例如 $T_{12}[0]=$ 代表的是后缀串 $T[x..m]=asdsasa$，我们想要获得其排序后的数组 $SA_{12}$ 就需要对每个后缀串排序（共 $O(m)$ 个后缀串，每个串长度 $O(m)$ ），但即使使用线性时间复杂度的基数排序，时间复杂度也只能到达 $O(m^2)$。</p>
 <p><em>DC3</em> 的思想是在进行基数排序时只考虑后缀的前3个字符，如下：</p>
-<p><video src='8.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay" loop="loop"></video></p>
+<p><video src='8.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
 <p>倘若后缀的前3个字符互不相同，得到的 $R_{12}$ 中的值也互不相同，只根据前3个字符便可正确排序得到 $SA_{12}$ 。</p>
 <p>否则，我们需要再向后比较3个字符，其实每个后缀的这3个字符的顺序已经通过上述步骤计算出来了，例如**，</p>
-<p>所以，需要以 $R_{12}$ 作为新的 $T$，递归执行。</p>
-<p><em>图</em></p>
-<h2 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h2><p>至此，我们得到了 $SA_{12}，R_{12}$，该步骤构造 $SA_{0}$ 。</p>
-<p>我们可以采用同样的方式，对 $T_0$ 所代表的所有后缀串 $T[T_0[i]..m]$ 进行基数排序。可以发现，$T[T_0[i]+1..m]$ 即 $T[T_1[i]..m]$ 的次序是已知（且不重复）的（存在于 $R_{12}$ 中），所以在排序时只需比较字符对 $(T[T_0[i]],  R_{12}[i])$，如下图：</p>
+<p>所以，需要以 $R_{12}$ 作为新的 $T$，递归执行，如下：</p>
+<p><video src='9.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
+<p>在递归了一层之后，$R_{12}$ 中的值互不相同，接下来在本层进行 <em>Step 2</em>。</p>
+<h2 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h2><p>经过 <em>Step 1</em>，递归至 $R_{12}$ 中的值互不相同，得到了正确的 $SA_{12}，R_{12}$，下面讨论如何构造 $SA_{0}$ 。</p>
+<img src="/2022/07/28/suffixtrees/10.png" class="">
+
+<p>我们可以采用同样的方式，对 $T_0$ 所代表的所有后缀串 $T[T_0[i]..m](0\leq i \lt m)$ 进行基数排序。可以发现，$T[T_0[i]+1..m]$ 即 $T[T_1[i]..m]$ 的次序是已知（且不重复）的（存在于 $R_{12}$ 中），所以在排序时只需比较字符对 $(T[T_0[i]],  R_{12}[i])$，如下图：</p>
 <p><em>图</em></p>
 <h2 id="Step-3"><a href="#Step-3" class="headerlink" title="Step 3"></a>Step 3</h2><p>至此，得到了 $SA_{12}、SA_0$，将其合并以构造出后缀数组 $SA$，合并算法如下：</p>
 <p><em>图</em></p>
