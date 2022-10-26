@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"acker.fun","root":"/","scheme":"Mist","version":"8.0.1","exturl":false,"sidebar":{"position":"right","width":300,"display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta name="description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Range Minimum Queries, Part One  问题描述 给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。  最简单的方法是直接枚举 $i,j$ 之间的元素，取出最小的即可，时间复杂度为$O(n)$，问题的难点在如何求出所有合法区">
+  <meta name="description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Range Minimum Queries, Part One  问题描述  给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。  最简单的方法是直接枚举 $i,j$ 之间的元素，取出最小的即可，时间复杂度为$O(n)$，问题的难点在如何求出所有合法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Range Minimum Queries(Part One)">
 <meta property="og:url" content="https://acker.fun/2020/10/29/rmq/index.html">
 <meta property="og:site_name" content="Acker&#39;s Blog">
-<meta property="og:description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Range Minimum Queries, Part One  问题描述 给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。  最简单的方法是直接枚举 $i,j$ 之间的元素，取出最小的即可，时间复杂度为$O(n)$，问题的难点在如何求出所有合法区">
+<meta property="og:description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Range Minimum Queries, Part One  问题描述  给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。  最简单的方法是直接枚举 $i,j$ 之间的元素，取出最小的即可，时间复杂度为$O(n)$，问题的难点在如何求出所有合法">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://acker.fun/2020/10/29/rmq/dp_draw.gif">
 <meta property="og:image" content="https://acker.fun/2020/10/29/rmq/block_draw.gif">
@@ -211,7 +211,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92"><span class="nav-number">2.</span> <span class="nav-text">动态规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%9D%97"><span class="nav-number">3.</span> <span class="nav-text">分块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%80%E7%96%8F%E8%A1%A8"><span class="nav-number">4.</span> <span class="nav-text">稀疏表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E7%BB%84%E5%90%88"><span class="nav-number">5.</span> <span class="nav-text">算法组合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%881%EF%BC%88%E7%A8%80%E7%96%8F%E8%A1%A8-%E6%97%A0%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">组合1（稀疏表+无预处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%882%EF%BC%88%E7%A8%80%E7%96%8F%E8%A1%A8-%E7%A8%80%E7%96%8F%E8%A1%A8%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">组合2（稀疏表+稀疏表）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%883%EF%BC%88%E7%A8%80%E7%96%8F%E8%A1%A8-%E7%BB%84%E5%90%881%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">组合3（稀疏表+组合1）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">动态规划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">分块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">稀疏表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">算法组合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%881%EF%BC%88%E7%A8%80%E7%96%8F%E8%A1%A8-%E6%97%A0%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">组合1（稀疏表+无预处理）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%882%EF%BC%88%E7%A8%80%E7%96%8F%E8%A1%A8-%E7%A8%80%E7%96%8F%E8%A1%A8%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">组合2（稀疏表+稀疏表）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%883%EF%BC%88%E7%A8%80%E7%96%8F%E8%A1%A8-%E7%BB%84%E5%90%881%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">组合3（稀疏表+组合1）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -340,13 +340,14 @@
         <blockquote>
 <p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/00/Slides00.pdf">Range Minimum Queries, Part One</a></p>
 </blockquote>
-<h1 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h1><blockquote>
+<h1>问题描述</h1>
+<blockquote>
 <p>给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。</p>
 </blockquote>
 <p>最简单的方法是直接枚举 $i,j$ 之间的元素，取出最小的即可，时间复杂度为$O(n)$，问题的难点在如何求出所有合法区间的最小值。</p>
 <p>对于一个长度为 $n$ 的数组，最多存在 $1+2+3+…+n=n(n+1)/2$ 即 $O(n^2)$ 个合法询问，若采用上述解法:</p>
 <ul>
-<li>询问个数：$O(n^2)$ </li>
+<li>询问个数：$O(n^2)$</li>
 <li>每次询问花费的时间：$O(n)$</li>
 <li>总时间复杂度：$O(n^3)$</li>
 </ul>
@@ -356,8 +357,13 @@
 <li>$q(n)$ 表示查询的时间复杂度</li>
 </ul>
 <p>那么上述枚举算法的时间复杂度则可记为：$&lt;O(1), O(n)&gt;$。</p>
-<h1 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h1><p>可以采用动态规划在 $O(n^2)$ 的时间内预处理出所有的合法询问，之后便可以在 $O(1)$ 时间内查询，其时间复杂度记为：$&lt;O(n^2), O(1)&gt;$。</p>
-<p>具体算法为：依次求出长度为 $1, 2,…, n$ 的所有区间的最小值，在求长度为 $k(1&lt;k\le n)$的区间: $[i, j] (j-i+1=k)$ 时，可利用两个长度为 $k-1$ 的区间 $ [i, j-1] $ 和  $[i+1, j]$ 直接比较求出，其状态转移方程为：<br>$$<br>f[i][j]=min(f[i][j-1],f[i+1][j])<br>$$<br>状态初始化为：$f[i][i]=a[i](0\le i &lt; n)$。</p>
+<h1>动态规划</h1>
+<p>可以采用动态规划在 $O(n^2)$ 的时间内预处理出所有的合法询问，之后便可以在 $O(1)$ 时间内查询，其时间复杂度记为：$&lt;O(n^2), O(1)&gt;$。</p>
+<p>具体算法为：依次求出长度为 $1, 2,…, n$ 的所有区间的最小值，在求长度为 $k(1&lt;k\le n)$的区间: $[i, j] (j-i+1=k)$ 时，可利用两个长度为 $k-1$ 的区间 $ [i, j-1] $ 和  $[i+1, j]$ 直接比较求出，其状态转移方程为：<br>
+$$<br>
+f[i][j]=min(f[i][j-1],f[i+1][j])<br>
+$$<br>
+状态初始化为：$f[i][i]=a[i](0\le i &lt; n)$。</p>
 <p>预处理的时间复杂度为：</p>
 <ul>
 <li>长度个数：$O(n)$</li>
@@ -370,30 +376,31 @@
 <table>
 <thead>
 <tr>
-<th align="center">$i$</th>
-<th align="center">0</th>
-<th align="center">1</th>
-<th align="center">2</th>
-<th align="center">3</th>
-<th align="center">4</th>
+<th style="text-align:center">$i$</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">4</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">$A[i]$</td>
-<td align="center">3</td>
-<td align="center">2</td>
-<td align="center">4</td>
-<td align="center">1</td>
-<td align="center">5</td>
+<tbody>
+<tr>
+<td style="text-align:center">$A[i]$</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">5</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>其求解过程如下图：</p>
 <img src="/2020/10/29/rmq/dp_draw.gif" class="">
-
 <p>具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> inf</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dp</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.a = a</span><br><span class="line">        self.f = [[inf <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.n)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.n)]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="comment"># Initialize the number in the diagonal.</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.n):</span><br><span class="line">            self.f[i][i] = self.a[i]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Iterator the diagonals.</span></span><br><span class="line">        <span class="comment"># l means the index of the diagonal(start from 0).</span></span><br><span class="line">        <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">1</span>, self.n):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, self.n - l):</span><br><span class="line">                j = i + l</span><br><span class="line">                self.f[i][j] = min(self.f[i][j - <span class="number">1</span>], self.f[i + <span class="number">1</span>][j])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.f[i][j]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">5</span>]</span><br><span class="line">    dp = Dp(a)</span><br><span class="line">    dp.preprocess()</span><br><span class="line">    print(dp.rmq(<span class="number">1</span>, <span class="number">3</span>))</span><br></pre></td></tr></table></figure>
-
-<h1 id="分块"><a href="#分块" class="headerlink" title="分块"></a>分块</h1><p>还可以采用分块的方法，将数组划分为连续的 $O(n/b)$ 个大小为 $b$ 的块，预处理出每一块的最小值，预处理的时间复杂度为：</p>
+<h1>分块</h1>
+<p>还可以采用分块的方法，将数组划分为连续的 $O(n/b)$ 个大小为 $b$ 的块，预处理出每一块的最小值，预处理的时间复杂度为：</p>
 <ul>
 <li>块个数：$O(n/b)$</li>
 <li>块大小：$O(b)$</li>
@@ -411,66 +418,78 @@
 <table>
 <thead>
 <tr>
-<th align="center">$i$</th>
-<th align="center">0</th>
-<th align="center">1</th>
-<th align="center">2</th>
-<th align="center">3</th>
-<th align="center">4</th>
-<th align="center">5</th>
-<th align="center">6</th>
-<th align="center">7</th>
-<th align="center">8</th>
-<th align="center">9</th>
-<th align="center">10</th>
-<th align="center">11</th>
-<th align="center">12</th>
-<th align="center">13</th>
+<th style="text-align:center">$i$</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">7</th>
+<th style="text-align:center">8</th>
+<th style="text-align:center">9</th>
+<th style="text-align:center">10</th>
+<th style="text-align:center">11</th>
+<th style="text-align:center">12</th>
+<th style="text-align:center">13</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">$A[i]$</td>
-<td align="center">3</td>
-<td align="center">5</td>
-<td align="center">4</td>
-<td align="center">1</td>
-<td align="center">2</td>
-<td align="center">9</td>
-<td align="center">7</td>
-<td align="center">6</td>
-<td align="center">5</td>
-<td align="center">8</td>
-<td align="center">2</td>
-<td align="center">4</td>
-<td align="center">7</td>
-<td align="center">4</td>
+<tbody>
+<tr>
+<td style="text-align:center">$A[i]$</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">9</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">4</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>其求解 $RMQ(1, 13)$ 过程如下图：</p>
 <img src="/2020/10/29/rmq/block_draw.gif" class="">
-
 <p>具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt, inf</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Block</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.len_b = int(sqrt(self.n))</span><br><span class="line">        self.cnt_b = (self.n - <span class="number">1</span>) // self.len_b + <span class="number">1</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.f = [inf <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.cnt_b)] </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="comment"># Find the minium in every blocks.</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i * self.len_b, i * self.len_b + self.len_b):</span><br><span class="line">                <span class="comment"># Maybe overflow.</span></span><br><span class="line">                <span class="keyword">if</span> j &gt;= self.n:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                self.f[i] = min(self.f[i], self.a[j])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        ans = inf</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Calculate the index of block containing i/j.</span></span><br><span class="line">        ith = i // self.len_b</span><br><span class="line">        jth = j // self.len_b</span><br><span class="line">        <span class="comment"># iterator within the block to find the minium. </span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith == jth:</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(i, j + <span class="number">1</span>):</span><br><span class="line">                ans = min(ans, self.a[k])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(i, ith * self.len_b + self.len_b):</span><br><span class="line">                ans = min(ans, self.a[k])</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(jth * self.len_b, j + <span class="number">1</span>):</span><br><span class="line">                ans = min(ans, self.a[k])</span><br><span class="line">            <span class="comment"># Iterator the blocks between i and j to find the minium.</span></span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(ith + <span class="number">1</span>, jth):</span><br><span class="line">                ans = min(ans, self.f[k])</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    block = Block(a)</span><br><span class="line">    block.preprocess()</span><br><span class="line">    print(block.rmq(<span class="number">1</span>, <span class="number">13</span>))</span><br></pre></td></tr></table></figure>
-
-<h1 id="稀疏表"><a href="#稀疏表" class="headerlink" title="稀疏表"></a>稀疏表</h1><p>对于上文的动态规划算法，对所有 $O(n^2)$ 个区间进行了预处理，可以通过减少预处理的区间个数（在保证依旧可以 $O(1)$ 查询的前提下）来进行优化，具体方法为：对于每一个可能的区间起点 $i(0\le i &lt; n)$ ，求出从 $i$ 开始的长度为 $2^0, 2^1, …, 2^k$ （直到不能再大为止）的区间的最小值（即求出所有长度为2的幂的区间），其时间复杂度为：</p>
+<h1>稀疏表</h1>
+<p>对于上文的动态规划算法，对所有 $O(n^2)$ 个区间进行了预处理，可以通过减少预处理的区间个数（在保证依旧可以 $O(1)$ 查询的前提下）来进行优化，具体方法为：对于每一个可能的区间起点 $i(0\le i &lt; n)$ ，求出从 $i$ 开始的长度为 $2^0, 2^1, …, 2^k$ （直到不能再大为止）的区间的最小值（即求出所有长度为2的幂的区间），其时间复杂度为：</p>
 <ul>
-<li><p>可能的起点个数：$O(n)$</p>
+<li>
+<p>可能的起点个数：$O(n)$</p>
 </li>
-<li><p>每个起点最多计算的区间个数：$O(log(n))$</p>
+<li>
+<p>每个起点最多计算的区间个数：$O(log(n))$</p>
 </li>
-<li><p>求解每个区间最小值时的花费：$O(1)$</p>
+<li>
+<p>求解每个区间最小值时的花费：$O(1)$</p>
 </li>
-<li><p>总时间复杂度：$O(nlog(n))$</p>
+<li>
+<p>总时间复杂度：$O(nlog(n))$</p>
 </li>
 </ul>
-<p>预处理的难点在于如何求解每个区间最小值来使得其花费为 $O(1)$。可以利用上文动态规划思想，具体算法为：依次求出长度为 $2^0, 2^1, …, 2^k$ 的所有区间的最小值，在求长度为 $2^l(0&lt;l\le k)$的区间: $[i, j] (j-i+1=2^l)$ 时，可利用两个长度为 $l-1$ 的区间 $ [i, i + 2^{l-1}-1] $ 和  $[i+2^{l-1}, j]$ 直接比较求出。为了节省状态空间，定义 $f[i][l]$ 为：起点为 $i$, 区间长度为 $2^l$ 的区间最小值，其状态转移方程为：<br>$$<br>f[i][l]=min(f[i][l-1], f[i+2^{l-1}][l-1])<br>$$<br>状态初始化为：$f[i][0]=a[i](0\le i&lt; n)$。</p>
+<p>预处理的难点在于如何求解每个区间最小值来使得其花费为 $O(1)$。可以利用上文动态规划思想，具体算法为：依次求出长度为 $2^0, 2^1, …, 2^k$ 的所有区间的最小值，在求长度为 $2^l(0&lt;l\le k)$的区间: $[i, j] (j-i+1=2^l)$ 时，可利用两个长度为 $l-1$ 的区间 $ [i, i + 2^{l-1}-1] $ 和  $[i+2^{l-1}, j]$ 直接比较求出。为了节省状态空间，定义 $f[i][l]$ 为：起点为 $i$, 区间长度为 $2^l$ 的区间最小值，其状态转移方程为：<br>
+$$<br>
+f[i][l]=min(f[i][l-1], f[i+2^{l-1}][l-1])<br>
+$$<br>
+状态初始化为：$f[i][0]=a[i](0\le i&lt; n)$。</p>
 <p>计算 $RMQ(i, j)$ 时，其过程及时间复杂度为：</p>
 <ul>
-<li><p>求出最大的 $k$ 使得 $2^k\le j-i+1$：$O(1)$</p>
+<li>
+<p>求出最大的 $k$ 使得 $2^k\le j-i+1$：$O(1)$</p>
 </li>
-<li><p>区间 $[i, j]$ 可分解为 $[i, i+2^k-1], [j-2^k+1, j]$ 的并集，取两区间最小值：$O(1)$</p>
+<li>
+<p>区间 $[i, j]$ 可分解为 $[i, i+2^k-1], [j-2^k+1, j]$ 的并集，取两区间最小值：$O(1)$</p>
 </li>
-<li><p>总时间复杂度：$O(1)$</p>
+<li>
+<p>总时间复杂度：$O(1)$</p>
 </li>
 </ul>
 <p>对于区间的分解，作如下解释：因为预处理过程中只求出了所有长度为2的幂的区间，所以分解的两个区间的长度都要是2的幂，故第一个区间从 $i$ 开始，长度为 $2^k$，第二个区间需要覆盖剩余区间，故以 $j$ 为结尾，向前延伸到长度为 $2^k$ 为止，由于 $2^{k+1}&gt;j-i+1$，故两区间必覆盖区间 $[i, j]$。</p>
@@ -479,36 +498,37 @@
 <table>
 <thead>
 <tr>
-<th align="center">$i$</th>
-<th align="center">0</th>
-<th align="center">1</th>
-<th align="center">2</th>
-<th align="center">3</th>
-<th align="center">4</th>
-<th align="center">5</th>
-<th align="center">6</th>
-<th align="center">7</th>
-<th align="center">8</th>
-<th align="center">9</th>
+<th style="text-align:center">$i$</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">7</th>
+<th style="text-align:center">8</th>
+<th style="text-align:center">9</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">$A[i]$</td>
-<td align="center">2</td>
-<td align="center">9</td>
-<td align="center">7</td>
-<td align="center">6</td>
-<td align="center">5</td>
-<td align="center">1</td>
-<td align="center">8</td>
-<td align="center">3</td>
-<td align="center">4</td>
-<td align="center">6</td>
+<tbody>
+<tr>
+<td style="text-align:center">$A[i]$</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">9</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">6</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>其预处理过程如下图：</p>
 <img src="/2020/10/29/rmq/st_draw.gif" class="">
-
 <p>其求解 $RMQ(2, 8)$ 时，过程如下：</p>
 <ul>
 <li>求出 $k=log(8-2)=2$</li>
@@ -516,8 +536,8 @@
 </ul>
 <p>具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> log </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">St</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.f = [[<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.n)] <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.n)]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.n):</span><br><span class="line">            self.f[i][<span class="number">0</span>] = self.a[i] </span><br><span class="line"></span><br><span class="line">        k = int(log(self.n) / log(<span class="number">2</span>))</span><br><span class="line">        <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">1</span>, k + <span class="number">1</span>):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(self.n):</span><br><span class="line">                <span class="keyword">if</span> i + int(pow(<span class="number">2</span>, l)) - <span class="number">1</span> &gt;= self.n:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                self.f[i][l] = min(self.f[i][l - <span class="number">1</span>], self.f[i + int(pow(<span class="number">2</span>, l - <span class="number">1</span>))][l - <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        k = int(log(j - i + <span class="number">1</span>) / log(<span class="number">2</span>))</span><br><span class="line">        <span class="keyword">return</span> min(self.f[i][k], self.f[j - int(pow(<span class="number">2</span>, k)) + <span class="number">1</span>][k])</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a = [<span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>]</span><br><span class="line">    st = St(a)</span><br><span class="line">    st.preprocess()</span><br><span class="line">    print(st.rmq(<span class="number">2</span>, <span class="number">8</span>))</span><br></pre></td></tr></table></figure>
-
-<h1 id="算法组合"><a href="#算法组合" class="headerlink" title="算法组合"></a>算法组合</h1><p>至此，有了四种求解 $RMQ$ 的算法：</p>
+<h1>算法组合</h1>
+<p>至此，有了四种求解 $RMQ$ 的算法：</p>
 <ul>
 <li>不进行任何预处理：$&lt;O(1), O(n)&gt;$</li>
 <li>预处理全部区间（动态规划）：$&lt;O(n^2), O(1)&gt;$</li>
@@ -552,27 +572,102 @@
 <li>块内查询：$q_2(b)$</li>
 <li>总时间复杂度：$O(q_1(n/b)+q_2(b))$</li>
 </ul>
-<h2 id="组合1（稀疏表-无预处理）"><a href="#组合1（稀疏表-无预处理）" class="headerlink" title="组合1（稀疏表+无预处理）"></a>组合1（稀疏表+无预处理）</h2><p>块间采用稀疏表算法，块内不进行预处理，块大小为 $log(n)$，即：<br>$$<br>\begin{eqnarray*}<br>&amp;p_1&amp;(n)=nlog(n)\\<br>&amp;q_1&amp;(n)=1\\<br>&amp;p_2&amp;(n)=1\\<br>&amp;q_2&amp;(n)=n\\<br>&amp;b&amp;=log(n)<br>\end{eqnarray*}<br>$$<br>预处理的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b)\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+(n/log(n)))\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n)+n)\\<br>=&amp;O&amp;(n)<br>\end{eqnarray*}<br>$$<br>查询的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>=&amp;O&amp;(1+log(n))\\<br>=&amp;O&amp;(log(n))<br>\end{eqnarray*}<br>$$<br>故其时间复杂度可记为：$&lt;O(n), O(log(n))&gt;$。</p>
+<h2 id="组合1（稀疏表-无预处理）">组合1（稀疏表+无预处理）</h2>
+<p>块间采用稀疏表算法，块内不进行预处理，块大小为 $log(n)$，即：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;p_1&amp;(n)=nlog(n)\\<br>
+&amp;q_1&amp;(n)=1\\<br>
+&amp;p_2&amp;(n)=1\\<br>
+&amp;q_2&amp;(n)=n\\<br>
+&amp;b&amp;=log(n)<br>
+\end{eqnarray*}<br>
+$$<br>
+预处理的时间复杂度为：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>
+=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b)\\<br>
+=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+(n/log(n)))\\<br>
+=&amp;O&amp;(n+n/log(n)\cdot log(n)+n)\\<br>
+=&amp;O&amp;(n)<br>
+\end{eqnarray*}<br>
+$$<br>
+查询的时间复杂度为：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>
+=&amp;O&amp;(1+log(n))\\<br>
+=&amp;O&amp;(log(n))<br>
+\end{eqnarray*}<br>
+$$<br>
+故其时间复杂度可记为：$&lt;O(n), O(log(n))&gt;$。</p>
 <p>其代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt, log, inf</span><br><span class="line"><span class="keyword">from</span> st <span class="keyword">import</span> St</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Combine1</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.len_b = max(<span class="number">1</span>, int(log(self.n)/log(<span class="number">2</span>)))</span><br><span class="line">        self.cnt_b = (self.n - <span class="number">1</span>) // self.len_b + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        f = [inf <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.cnt_b)] </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i * self.len_b, i * self.len_b + self.len_b):</span><br><span class="line">                <span class="keyword">if</span> j &gt;= self.n:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                f[i] = min(f[i], self.a[j])</span><br><span class="line"></span><br><span class="line">        self.st = St(f)</span><br><span class="line">        self.st.preprocess()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        ans = inf</span><br><span class="line">        ith = i // self.len_b </span><br><span class="line">        jth = j // self.len_b</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith == jth:</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(i, j + <span class="number">1</span>):</span><br><span class="line">                ans = min(ans, self.a[k])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(i, ith * self.len_b + self.len_b):</span><br><span class="line">                ans = min(ans, self.a[k])</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(jth * self.len_b, j + <span class="number">1</span>):</span><br><span class="line">                ans = min(ans, self.a[k])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith + <span class="number">1</span> &lt;= jth - <span class="number">1</span>:</span><br><span class="line">            ans = min(ans, self.st.rmq(ith + <span class="number">1</span>, jth - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>: </span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    combine1 = Combine1(a)</span><br><span class="line">    combine1.preprocess()</span><br><span class="line">    print(combine1.rmq(<span class="number">1</span>, <span class="number">13</span>))</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h2 id="组合2（稀疏表-稀疏表）"><a href="#组合2（稀疏表-稀疏表）" class="headerlink" title="组合2（稀疏表+稀疏表）"></a>组合2（稀疏表+稀疏表）</h2><p>块间与块内均采用稀疏表，块大小为 $log(n)$，即：<br>$$<br>\begin{eqnarray*}<br>&amp;p_1&amp;(n)=nlog(n)\\<br>&amp;q_1&amp;(n)=1\\<br>&amp;p_2&amp;(n)=nlog(n)\\<br>&amp;q_2&amp;(n)=1\\<br>&amp;b&amp;=log(n)<br>\end{eqnarray*}<br>$$<br>预处理的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b\cdot b\cdot log(b))\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+n\cdot log(log(n)))\\<br>=&amp;O&amp;(n+n+n\cdot log(log(n)))\\<br>=&amp;O&amp;(n\cdot log(log(n)))<br>\end{eqnarray*}<br>$$<br>查询的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>=&amp;O&amp;(1)<br>\end{eqnarray*}<br>$$<br>故其时间复杂度可记为：$&lt;O(n\cdot log(log(n))), O(1)&gt;$。</p>
+<h2 id="组合2（稀疏表-稀疏表）">组合2（稀疏表+稀疏表）</h2>
+<p>块间与块内均采用稀疏表，块大小为 $log(n)$，即：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;p_1&amp;(n)=nlog(n)\\<br>
+&amp;q_1&amp;(n)=1\\<br>
+&amp;p_2&amp;(n)=nlog(n)\\<br>
+&amp;q_2&amp;(n)=1\\<br>
+&amp;b&amp;=log(n)<br>
+\end{eqnarray*}<br>
+$$<br>
+预处理的时间复杂度为：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>
+=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b\cdot b\cdot log(b))\\<br>
+=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+n\cdot log(log(n)))\\<br>
+=&amp;O&amp;(n+n+n\cdot log(log(n)))\\<br>
+=&amp;O&amp;(n\cdot log(log(n)))<br>
+\end{eqnarray*}<br>
+$$<br>
+查询的时间复杂度为：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>
+=&amp;O&amp;(1)<br>
+\end{eqnarray*}<br>
+$$<br>
+故其时间复杂度可记为：$&lt;O(n\cdot log(log(n))), O(1)&gt;$。</p>
 <p>其代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt, log, inf</span><br><span class="line"><span class="keyword">from</span> st <span class="keyword">import</span> St</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Combine2</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.len_b = max(<span class="number">1</span>, int(log(self.n)/log(<span class="number">2</span>)))</span><br><span class="line">        self.cnt_b = (self.n - <span class="number">1</span>) // self.len_b + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        f = [inf <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.cnt_b)] </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i * self.len_b, i * self.len_b + self.len_b):</span><br><span class="line">                <span class="keyword">if</span> j &gt;= self.n:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                f[i] = min(f[i], self.a[j])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># ST between blocks.</span></span><br><span class="line">        self.st = St(f)</span><br><span class="line">        self.st.preprocess()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># ST winth block.</span></span><br><span class="line">        self.sts = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            tmp = self.a[i * self.len_b : min(self.n, i * self.len_b + self.len_b)]</span><br><span class="line">            self.sts.append(St(tmp))</span><br><span class="line">            self.sts[i].preprocess()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        ans = inf</span><br><span class="line">        ith = i // self.len_b </span><br><span class="line">        jth = j // self.len_b</span><br><span class="line"></span><br><span class="line">        i -= ith * self.len_b</span><br><span class="line">        j -= jth * self.len_b</span><br><span class="line">        <span class="keyword">if</span> ith == jth:</span><br><span class="line">            ans = min(ans, self.sts[ith].rmq(i, j))  </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ans = min(ans, self.sts[ith].rmq(i, self.len_b - <span class="number">1</span>))</span><br><span class="line">            ans = min(ans, self.sts[jth].rmq(<span class="number">0</span>, j))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith + <span class="number">1</span> &lt;= jth - <span class="number">1</span>:</span><br><span class="line">            ans = min(ans, self.st.rmq(ith + <span class="number">1</span>, jth - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>: </span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    combine1 = Combine1(a)</span><br><span class="line">    combine1.preprocess()</span><br><span class="line">    print(combine1.rmq(<span class="number">1</span>, <span class="number">13</span>))</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="组合3（稀疏表-组合1）"><a href="#组合3（稀疏表-组合1）" class="headerlink" title="组合3（稀疏表+组合1）"></a>组合3（稀疏表+组合1）</h2><p>块间采用稀疏表算法，块内采用组合1算法，块大小为 $log(n)$，即：<br>$$<br>\begin{eqnarray*}<br>&amp;p_1&amp;(n)=nlog(n)\\<br>&amp;q_1&amp;(n)=1\\<br>&amp;p_2&amp;(n)=n\\<br>&amp;q_2&amp;(n)=log(n)\\<br>&amp;b&amp;=log(n)<br>\end{eqnarray*}<br>$$<br>预处理的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b\cdot b)\\<br>=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+n)\\<br>=&amp;O&amp;(n)<br>\end{eqnarray*}<br>$$<br>查询的时间复杂度为：<br>$$<br>\begin{eqnarray*}<br>&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>=&amp;O&amp;(1+log(log(n)))\\<br>=&amp;O&amp;(log(log(n)))<br>\end{eqnarray*}<br>$$<br>故其时间复杂度可记为：$&lt;O(n), O(log(log(n)))&gt;$。</p>
+<h2 id="组合3（稀疏表-组合1）">组合3（稀疏表+组合1）</h2>
+<p>块间采用稀疏表算法，块内采用组合1算法，块大小为 $log(n)$，即：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;p_1&amp;(n)=nlog(n)\\<br>
+&amp;q_1&amp;(n)=1\\<br>
+&amp;p_2&amp;(n)=n\\<br>
+&amp;q_2&amp;(n)=log(n)\\<br>
+&amp;b&amp;=log(n)<br>
+\end{eqnarray*}<br>
+$$<br>
+预处理的时间复杂度为：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;O&amp;(n+p_1(n/b)+(n/b)p_2(b))\\<br>
+=&amp;O&amp;(n+n/b\cdot log(n/b)+n/b\cdot b)\\<br>
+=&amp;O&amp;(n+n/log(n)\cdot log(n/log(n))+n)\\<br>
+=&amp;O&amp;(n)<br>
+\end{eqnarray*}<br>
+$$<br>
+查询的时间复杂度为：<br>
+$$<br>
+\begin{eqnarray*}<br>
+&amp;O&amp;(q_1(n/b)+q_2(b))\\<br>
+=&amp;O&amp;(1+log(log(n)))\\<br>
+=&amp;O&amp;(log(log(n)))<br>
+\end{eqnarray*}<br>
+$$<br>
+故其时间复杂度可记为：$&lt;O(n), O(log(log(n)))&gt;$。</p>
 <p>其代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt, log, inf</span><br><span class="line"><span class="keyword">from</span> st <span class="keyword">import</span> St</span><br><span class="line"><span class="keyword">from</span> combine1 <span class="keyword">import</span> Combine1</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Combine3</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.len_b = max(<span class="number">1</span>, int(log(self.n)/log(<span class="number">2</span>)))</span><br><span class="line">        self.cnt_b = (self.n - <span class="number">1</span>) // self.len_b + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        f = [inf <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.cnt_b)] </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i * self.len_b, i * self.len_b + self.len_b):</span><br><span class="line">                <span class="keyword">if</span> j &gt;= self.n:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                f[i] = min(f[i], self.a[j])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># ST between blocks.</span></span><br><span class="line">        self.st = St(f)</span><br><span class="line">        self.st.preprocess()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># ST winth block.</span></span><br><span class="line">        self.combine1s = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            tmp = self.a[i * self.len_b : min(self.n, i * self.len_b + self.len_b)]</span><br><span class="line">            self.combine1s.append(Combine1(tmp))</span><br><span class="line">            self.combine1s[i].preprocess()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        ans = inf</span><br><span class="line">        ith = i // self.len_b </span><br><span class="line">        jth = j // self.len_b</span><br><span class="line"></span><br><span class="line">        i -= ith * self.len_b</span><br><span class="line">        j -= jth * self.len_b</span><br><span class="line">        <span class="keyword">if</span> ith == jth:</span><br><span class="line">            ans = min(ans, self.combine1s[ith].rmq(i, j))  </span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ans = min(ans, self.combine1s[ith].rmq(i, self.len_b - <span class="number">1</span>))</span><br><span class="line">            ans = min(ans, self.combine1s[jth].rmq(<span class="number">0</span>, j))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith + <span class="number">1</span> &lt;= jth - <span class="number">1</span>:</span><br><span class="line">            ans = min(ans, self.st.rmq(ith + <span class="number">1</span>, jth - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>: </span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    combine1 = Combine1(a)</span><br><span class="line">    combine1.preprocess()</span><br><span class="line">    print(combine1.rmq(<span class="number">1</span>, <span class="number">13</span>))</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>至此，共得出7种算法，如下：</p>
+<h1>总结</h1>
+<p>至此，共得出7种算法，如下：</p>
 <ul>
 <li>不进行任何预处理：$&lt;O(1), O(n)&gt;$</li>
 <li>预处理全部区间（动态规划）：$&lt;O(n^2), O(1)&gt;$</li>

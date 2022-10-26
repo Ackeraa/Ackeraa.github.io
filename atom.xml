@@ -46,16 +46,18 @@
     <link href="https://acker.fun/2022/07/28/suffixtrees/"/>
     <id>https://acker.fun/2022/07/28/suffixtrees/</id>
     <published>2022-07-28T14:03:54.000Z</published>
-    <updated>2022-10-24T08:50:20.552Z</updated>
+    <updated>2022-10-26T06:55:13.736Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;问题描述&quot;&gt;&lt;a href=&quot;#问题描述&quot; class=&quot;headerlink&quot; title=&quot;问题描述&quot;&gt;&lt;/a&gt;问题描述&lt;/h1&gt;&lt;blockquote&gt;
+    <summary type="html">&lt;h1&gt;问题描述&lt;/h1&gt;
+&lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$</summary>
+&lt;li&gt;给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$ 和长度为 $n$ 的模式串 $P$， 找出所有前缀为 $P$ 的文本串。&lt;/li&gt;
+&lt;li&gt;给定长度为 $m$ 的文本串</summary>
         
       
     
