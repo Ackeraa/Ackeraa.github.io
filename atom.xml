@@ -46,7 +46,7 @@
     <link href="https://acker.fun/2022/07/28/suffixtrees/"/>
     <id>https://acker.fun/2022/07/28/suffixtrees/</id>
     <published>2022-07-28T14:03:54.000Z</published>
-    <updated>2022-10-26T06:55:13.736Z</updated>
+    <updated>2022-10-29T10:50:47.594Z</updated>
     
     
       
@@ -77,15 +77,16 @@
     <link href="https://acker.fun/2022/07/04/ac-automata/"/>
     <id>https://acker.fun/2022/07/04/ac-automata/</id>
     <published>2022-07-04T07:00:03.000Z</published>
-    <updated>2022-07-28T14:05:18.027Z</updated>
+    <updated>2022-10-29T11:40:14.705Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;本文参考自斯坦福大学数据结构课程 &lt;a href=&quot;http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/&quot;&gt;CS166&lt;/a&gt; 的 &lt;a</summary>
+    <summary type="html">&lt;h1&gt;问题描述&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$</summary>
         
       
     
@@ -105,15 +106,17 @@
     <link href="https://acker.fun/2021/01/29/rmq2/"/>
     <id>https://acker.fun/2021/01/29/rmq2/</id>
     <published>2021-01-29T03:50:39.000Z</published>
-    <updated>2021-11-28T13:10:23.656Z</updated>
+    <updated>2022-10-29T04:23:28.150Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;本文参考自斯坦福大学数据结构课程 &lt;a href=&quot;http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/&quot;&gt;CS166&lt;/a&gt; 的 &lt;a</summary>
+    <summary type="html">&lt;h1&gt;问题回顾&lt;/h1&gt;
+&lt;p&gt;在 &lt;a href=&quot;/2020/10/29/rmq/&quot; title=&quot;Part One&quot;&gt;Part One&lt;/a&gt;中，基于分块算法，建立了这样一个算法框架：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;块间采用时间复杂度为</summary>
         
       
     
@@ -133,15 +136,18 @@
     <link href="https://acker.fun/2020/10/29/rmq/"/>
     <id>https://acker.fun/2020/10/29/rmq/</id>
     <published>2020-10-29T08:44:12.000Z</published>
-    <updated>2022-07-04T07:44:44.901Z</updated>
+    <updated>2022-10-29T11:53:09.290Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;blockquote&gt;
-&lt;p&gt;本文参考自斯坦福大学数据结构课程 &lt;a href=&quot;http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/&quot;&gt;CS166&lt;/a&gt; 的 &lt;a</summary>
+    <summary type="html">&lt;h1&gt;问题描述&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;最简单的方法是直接枚举</summary>
         
       
     

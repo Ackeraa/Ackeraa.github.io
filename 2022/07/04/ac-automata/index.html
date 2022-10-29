@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"acker.fun","root":"/","scheme":"Mist","version":"8.0.1","exturl":false,"sidebar":{"position":"right","width":300,"display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta name="description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Aho-Corasick Automata  问题描述  给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有位置。  为了方便描述，作如下符号定义：  $T$：文本串 $P_i$：模式串 $m&#x3D;|T|$：文本串的长度 $k$：模式串的个数 $n&#x3D;|P_1|+|P_2|+ … + |P">
+  <meta name="description" content="问题描述  给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有位置。  为了方便描述，作如下符号定义：  $T$：文本串 $P_i$：模式串 $m&#x3D;|T|$：文本串的长度 $k$：模式串的个数 $n&#x3D;|P_1|+|P_2|+ … + |P_k|$：所有模式串的总长度 $L_{max}$：最长的模式串 $\Sigma$：构成所有字符串的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Aho-Corasick Automata">
 <meta property="og:url" content="https://acker.fun/2022/07/04/ac-automata/index.html">
 <meta property="og:site_name" content="Acker&#39;s Blog">
-<meta property="og:description" content="本文参考自斯坦福大学数据结构课程 CS166 的 Aho-Corasick Automata  问题描述  给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有位置。  为了方便描述，作如下符号定义：  $T$：文本串 $P_i$：模式串 $m&#x3D;|T|$：文本串的长度 $k$：模式串的个数 $n&#x3D;|P_1|+|P_2|+ … + |P">
+<meta property="og:description" content="问题描述  给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有位置。  为了方便描述，作如下符号定义：  $T$：文本串 $P_i$：模式串 $m&#x3D;|T|$：文本串的长度 $k$：模式串的个数 $n&#x3D;|P_1|+|P_2|+ … + |P_k|$：所有模式串的总长度 $L_{max}$：最长的模式串 $\Sigma$：构成所有字符串的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://acker.fun/2022/07/04/ac-automata/trie_build.gif">
 <meta property="og:image" content="https://acker.fun/2022/07/04/ac-automata/trie_query.gif">
@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://acker.fun/2022/07/04/ac-automata/ac_suffix_5.png">
 <meta property="og:image" content="https://acker.fun/2022/07/04/ac-automata/ac_suffix_6.png">
 <meta property="article:published_time" content="2022-07-04T07:00:03.000Z">
-<meta property="article:modified_time" content="2022-07-28T14:05:18.027Z">
+<meta property="article:modified_time" content="2022-10-29T11:40:14.705Z">
 <meta property="article:author" content="Acker">
 <meta property="article:tag" content="数据结构">
 <meta property="article:tag" content="python">
@@ -216,7 +216,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">字典树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">AC自动机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%A4%B1%E9%85%8D%E6%8C%87%E9%92%88"><span class="nav-number">3.1.</span> <span class="nav-text">构造失配指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E8%BE%93%E5%87%BA%E6%8C%87%E9%92%88"><span class="nav-number">3.2.</span> <span class="nav-text">构造输出指针</span></a></li></ol></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">字典树</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">AC自动机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%A4%B1%E9%85%8D%E6%8C%87%E9%92%88"><span class="nav-number">3.1.</span> <span class="nav-text">构造失配指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E8%BE%93%E5%87%BA%E6%8C%87%E9%92%88"><span class="nav-number">3.2.</span> <span class="nav-text">构造输出指针</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -313,7 +313,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-07-28 22:05:18" itemprop="dateModified" datetime="2022-07-28T22:05:18+08:00">2022-07-28</time>
+        <time title="修改时间：2022-10-29 19:40:14" itemprop="dateModified" datetime="2022-10-29T19:40:14+08:00">2022-10-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -342,10 +342,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <blockquote>
-<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Slides02.pdf">Aho-Corasick Automata</a></p>
-</blockquote>
-<h1>问题描述</h1>
+        <h1>问题描述</h1>
 <blockquote>
 <p>给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有位置。</p>
 </blockquote>
@@ -403,10 +400,10 @@
 <p>通过对trie进行广度优先搜索来构造 $wa$ 的失配指针：</p>
 <ul>
 <li>
-<p>如果当前节点为根结点，则它没有失配指针</p>
+<p>如果当前结点为根结点，则它没有失配指针</p>
 </li>
 <li>
-<p>如果当前节点为根结点的子结点，则它的失配指针指向根结点</p>
+<p>如果当前结点为根结点的子结点，则它的失配指针指向根结点</p>
 </li>
 <li>
 <p>否则，设该结点为 $wa$，$x$ 为 $w$ 的失配指针指向的结点：</p>
@@ -440,7 +437,7 @@
 <li>从Trie的根结点开始</li>
 <li>对于 $T$ 中的每一个字符 $c$：
 <ul>
-<li>如果当前节点的子结点没有 $c$:
+<li>如果当前结点的子结点没有 $c$:
 <ul>
 <li>如果当前位于根结点，结束当前循环</li>
 <li>否则，移动到失配指针指向的结点</li>
@@ -448,14 +445,18 @@
 </li>
 <li>如果当前结点的子结点有 $c$，移动到该结点</li>
 <li>如果当前结点对应一个模式串，输出该模式串</li>
-<li>输出当前节点的输出指针链上的所有模式串</li>
+<li>输出当前结点的输出指针链上的所有模式串</li>
 </ul>
 </li>
 </ul>
 <p>具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="keyword">import</span> queue</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, pattern=None</span>):</span></span><br><span class="line">        self.children = defaultdict(TrieNode)</span><br><span class="line">        self.pattern = <span class="literal">None</span></span><br><span class="line">        self.suffix_link = <span class="literal">None</span></span><br><span class="line">        self.output_link = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ACAutomata</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, patterns</span>):</span></span><br><span class="line">        self.patterns = patterns</span><br><span class="line">        self.root = TrieNode()</span><br><span class="line">        self.build()</span><br><span class="line">        self.bfs()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">for</span> pattern <span class="keyword">in</span> self.patterns:</span><br><span class="line">            u = self.root</span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> pattern:</span><br><span class="line">                u = u.children[c]</span><br><span class="line">            u.pattern = pattern</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">bfs</span>(<span class="params">self</span>):</span></span><br><span class="line">        q = queue.Queue()</span><br><span class="line">        q.put(self.root)</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            u = q.get()</span><br><span class="line">            <span class="comment"># Build suffix link.</span></span><br><span class="line">            <span class="keyword">for</span> a, v <span class="keyword">in</span> u.children.items():</span><br><span class="line">                <span class="keyword">if</span> u == self.root:</span><br><span class="line">                    v.suffix_link = u</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    x = u.suffix_link</span><br><span class="line">                    <span class="keyword">while</span> v.suffix_link <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                        <span class="keyword">if</span> a <span class="keyword">in</span> x.children.keys():</span><br><span class="line">                            v.suffix_link = x.children[a]</span><br><span class="line">                        <span class="keyword">elif</span> x == self.root:</span><br><span class="line">                            v.suffix_link = x</span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            x = x.suffix_link</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Build output link.</span></span><br><span class="line">                <span class="keyword">if</span> v.suffix_link.pattern <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                    v.output_link = v.suffix_link</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    v.output_link = v.suffix_link.output_link</span><br><span class="line"></span><br><span class="line">                q.put(v)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">match</span>(<span class="params">self, text</span>):</span></span><br><span class="line">        u = self.root</span><br><span class="line">        answer = defaultdict(list)</span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> text:</span><br><span class="line">            <span class="keyword">while</span> <span class="keyword">not</span> c <span class="keyword">in</span> u.children.keys():</span><br><span class="line">                u = u.suffix_link</span><br><span class="line">                <span class="keyword">if</span> u == self.root <span class="keyword">or</span> u <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> u <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> c <span class="keyword">in</span> u.children.keys():</span><br><span class="line">                u = u.children[c]</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            v = u</span><br><span class="line">            <span class="keyword">while</span> v <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">if</span> v.pattern <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                    answer[v.pattern].append(j - len(v.pattern))</span><br><span class="line">                v = v.output_link</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> answer</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    patterns = [<span class="string">&quot;ab&quot;</span>, <span class="string">&quot;about&quot;</span>, <span class="string">&quot;at&quot;</span>, <span class="string">&quot;ate&quot;</span>, <span class="string">&quot;be&quot;</span>, <span class="string">&quot;bed&quot;</span>, <span class="string">&quot;edge&quot;</span>, <span class="string">&quot;get&quot;</span>]</span><br><span class="line">    text = <span class="string">&quot;abedget&quot;</span></span><br><span class="line">    ac_automata = ACAutomata(patterns)</span><br><span class="line">    print(ac_automata.match(text))</span><br></pre></td></tr></table></figure>
 <p>至此，得到一个时间复杂度为$&lt;O(n), O(m+z)&gt;$的字符串匹配算法（该算法输出敏感，其中 $z$ 为匹配成功的个数），适合模式串固定，文本串变化的这类问题。</p>
-<p>那么对于文本串固定，模式串变化的问题可使用**<a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/AC-Automata">后缀树（Suffix Trees)</a>**算法。</p>
+<p>那么对于文本串固定，模式串变化的问题可使用<a href="/2022/07/28/suffixtrees/" title="后缀数组">后缀数组</a>算法。</p>
+<h1>参考资料</h1>
+<ul>
+<li>斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a>: <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Slides02.pdf">Aho-Corasick Automata</a></li>
+</ul>
 <p><strong><a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/AC-Automata">下载</a>代码.</strong></p>
 
     </div>

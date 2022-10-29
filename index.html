@@ -460,7 +460,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-10-26 14:55:13" itemprop="dateModified" datetime="2022-10-26T14:55:13+08:00">2022-10-26</time>
+        <time title="修改时间：2022-10-29 18:50:47" itemprop="dateModified" datetime="2022-10-29T18:50:47+08:00">2022-10-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -486,68 +486,82 @@
 <blockquote>
 <ol>
 <li>给定总长度为 $m$ 的 $k$ 个文本串：$T_1, T_2, …, T_k$ 和长度为 $n$ 的模式串 $P$， 找出所有前缀为 $P$ 的文本串。</li>
-<li>给定长度为 $m$ 的文本串 $T$ ，找出模式串 $P$ 出现的所有位置。</li>
+<li>给定长度为 $m$ 的文本串 $T$ ，找出长度为 $n$ 的模式串 $P$ 出现的所有位置。</li>
 <li>给定长度为 $m$ 的文本串 $T$，找出 $T$ 的最长重复子串。</li>
 </ol>
 </blockquote>
 <h1>字典树</h1>
-<p>对于<strong>问题1</strong>，使用 <em>AC-Automata</em> 中提到的字典树：</p>
+<p>对于<strong>问题1</strong>，使用 <a href="/2022/07/04/ac-automata/" title="AC-Automata">AC-Automata</a> 中提到的字典树：</p>
 <ul>
 <li>构建所有文本串的字典树</li>
-<li>从根节点开始匹配 $P$</li>
+<li>从根结点开始匹配 $P$</li>
 <li>若匹配失败则没有前缀为的文本串</li>
-<li>否则从匹配到的最后一个节点开始 <em>DFS</em>，找出所有文本串</li>
+<li>否则从匹配到的最后一个结点开始 DFS，找出所有文本串</li>
 </ul>
 <img src="/2022/07/28/suffixtrees/1.gif" class="">
 <img src="/2022/07/28/suffixtrees/2.gif" class="">
 <p>时间复杂度为：</p>
 <ul>
-<li>构造字典树：$O(m)$</li>
-<li>匹配：$O(n)$</li>
-<li><em>DFS</em> 找出所有文本串：$O(m)$</li>
-<li>总时间复杂度：$&lt;O(m), O(n+m)$&gt;</li>
+<li>
+<p>构造字典树：$O(m)$</p>
+</li>
+<li>
+<p>匹配：$O(n)$</p>
+</li>
+<li>
+<p><em>DFS</em> 输出所有文本串：$O(m)$</p>
+</li>
+<li>
+<p>总时间复杂度：$&lt;O(m), O(n+m)$&gt;</p>
+</li>
 </ul>
 <h1>压缩字典树</h1>
-<p>如果我们只想找出文本串的ID，可使用压缩字典树来降低上述 <em>DFS</em> 的时间复杂度，相较于字典树，其中的作为唯一子节点的节点都与其父节点合并，如下图：</p>
+<p>如果我们只想找出文本串的ID，可使用压缩字典树来降低 DFS 输出时的时间复杂度。压缩字典树是将字典树中子结点唯一的结点都与其父结点合并，如下图：</p>
 <img src="/2022/07/28/suffixtrees/3.png" class="">
-<p>其中 <code>$ </code> 是为了方便匹配而向每个文本串末尾添加的终止符，匹配到含有终止符的文本则表示匹配成功。</p>
-<p>$k$ 个文本串构成的压缩字典树有 $O(k)$ 个节点，证明如下：首先删除树中的内部节点， 剩下 $k$ 个由单个叶子节点构成的簇，然后每次增加一个叶子结点，可至少减少一个簇（每个内部节点至少有两个子节点），因此最多能增加 $k$个内部节点。</p>
-<p>故其时间复杂度降为：$&lt;O(m), O(n+z)$&gt;（$z$ 为匹配的文本串个数）</p>
+<p>其中<code>$</code>是为了方便匹配而向每个文本串末尾添加的哨兵字符，匹配到含有哨兵字符的文本则表示匹配成功。</p>
+<p>$k$ 个文本串构成的压缩字典树有 $O(k)$ 个结点，证明如下：首先删除树中的内结点（非叶子结点）， 剩下 $k$ 个由单个叶子结点构成的簇，然后每次增加一个内结点，可至少减少一个簇（每个内结点至少有两个子结点），因此最多能增加 $k$个内结点。</p>
+<p>故使用压缩字典树可将时间复杂度降为：$&lt;O(m), O(n+z)$&gt;（$z$ 为匹配的文本串个数）</p>
 <h1>后缀树</h1>
 <p>字符串 $T$ 的后缀树是由 $T$ 的所有后缀构成的压缩字典树，如下图：</p>
 <img src="/2022/07/28/suffixtrees/4.png" class="">
 <p>对于<strong>问题2</strong>，如果 $P$ 是 $T$ 的子串，则 $P$ 应是 $T$ 的某一个后缀的前缀，可构造字符串 $T$ 的后缀树，在后缀树上进行匹配：</p>
 <ul>
-<li>首先从根节点开始匹配模式串 $P$，直至 $P$ 的最后一个字符，时间复杂度：$O(n)$</li>
-<li><em>DFS</em> 找出所有匹配， 时间复杂度：$O(z)$</li>
+<li>首先从根结点开始匹配模式串 $P$，直至 $P$ 的最后一个字符，时间复杂度：$O(n)$</li>
+<li>DFS 输出所有匹配， 时间复杂度：$O(z)$</li>
 </ul>
-<p>后缀树中的内节点（非叶子节点）有特殊的含义：其所代表的字符串在文本串 $T$ 中至少出现两次。因此，对于<strong>问题3</strong>， 只需要在后缀树上 <em>DFS</em>，找到所代表字符串最长的内节点，时间复杂度为：$&lt;O(m), O(m)$&gt;</p>
+<p>后缀树中的内结点有特殊的含义：其所代表的字符串在文本串 $T$ 中至少出现两次。那么对于<strong>问题3</strong>， 只需要在后缀树上 DFS，找到所代表字符串最长的内结点，时间复杂度为：$&lt;O(m), O(m)$&gt;</p>
 <p>考虑构造后缀树的时间和空间复杂度：</p>
 <ul>
 <li>
-<p>对于上图的后缀树，保存了所有后缀串，所需的空间复杂度为 $O(m^2)$，但可只保存对应的起点和终点下标，将空间复杂度降低到：$O(m)$</p>
+<p>对于上图的后缀树，保存了所有后缀，所需的空间复杂度为 $O(m^2)$，但可只保存对应的起点和终点下标，将空间复杂度降低到：$O(m)$</p>
 </li>
 <li>
-<p>如果直接构造后缀树需要 $O(m^2)$ 的时间复杂度，有很多的算法，**，</p>
+<p>暴力构造的时间复杂度为 $O(m^2)$ ，有很多 $O(m)$ 的构造算法，本文暂不作讨论</p>
 </li>
 </ul>
-<p>由于后缀树**，与其等价的后缀数组使用较多，下文将讨论：</p>
+<p>下文将讨论：</p>
 <ul>
-<li>$O(n)$ 构造后缀数组的 <em>DC3</em> 算法</li>
-<li>$O(n)$ 构造 <em>LCP</em> 的 <em>kasai</em> 算法</li>
-<li>$O(n)$ 由后缀数组和 <em>LCP</em> 构造后缀树的算法</li>
+<li>$O(m)$ 构造后缀数组的 DC3 算法</li>
+<li>$O(m)$ 构造最长公共前缀 LCP 的 kasai 算法</li>
+<li>$O(m)$ 由后缀数组和 LCP 构造后缀树的算法</li>
 </ul>
 <h1>后缀数组</h1>
-<p>字符串 $T$ 的后缀数组是由 $T$ 的后缀构成的有序数组，通常只需存储起点下标以降低空间消耗。下文将以 $T=abcabcacab$ 为例，分析构造后缀数组的过程。</p>
+<p>长度为 $m$ 的字符串 $T$ 的后缀数组是由 $T$ 的后缀构成的有序数组，通常只需存储起点下标以降低空间消耗。下文将以 $T=cbacbacacb$ 为例，分析构造后缀数组（存储起点下标）的过程。</p>
 <img src="/2022/07/28/suffixtrees/5.png" class="">
-<p>对于<strong>问题2</strong>， 所有的匹配位置在后缀数组中是连续的，因此，只需在后缀数组中进行二分查找即可，时间复杂度为：</p>
+<p>对于<strong>问题2</strong>， 所有的匹配位置在后缀数组中应是连续的，因此，只需在后缀数组中进行二分查找即可，时间复杂度为：</p>
 <ul>
 <li>二分查找找出第一个匹配位置：$O(n\log m)$</li>
 <li>找出所有匹配：$O(z)$</li>
 <li>总时间复杂度： $O(n\log m + z)$</li>
 </ul>
-<p>暴力构造**</p>
-<p>构造后缀数组最简单、最快的一个方法是DC3（Difference Cover modulo 3），首先作如下定义：</p>
+<p>后缀数组的构造其实就是对所有后缀进行排序，如果采用线性时间复杂度的基数排序，时间复杂度为：</p>
+<ul>
+<li>后缀的个数：$O(m)$</li>
+<li>每个后缀的长度：$O(m)$</li>
+<li>总时间复杂度：$O(m^2)$</li>
+</ul>
+<p>那可不可以更快呢？这些后缀的一个重要特性就是，长的后缀包含短的后缀，这就导致了有大量的重复子串，DC3（Difference Cover modulo 3）算法便充分利用了这一点。</p>
+<p>首先作如下定义：</p>
 <table>
 <thead>
 <tr>
@@ -574,7 +588,7 @@
 </tr>
 <tr>
 <td style="text-align:center">$R_{12}$</td>
-<td style="text-align:center">辅助数组，记录 $T_{12}$ 中元素的排名，$R_{12}[SA_{12}[i]]=i+1$（0作为哨兵字符，所以从1开始排名）</td>
+<td style="text-align:center">辅助数组，记录 $T_{12}$ 中元素的排名，即在$SA_{12}$中的位置（排名从1开始，0作为哨兵）</td>
 </tr>
 <tr>
 <td style="text-align:center">$SA$</td>
@@ -582,44 +596,44 @@
 </tr>
 <tr>
 <td style="text-align:center">$R$</td>
-<td style="text-align:center">辅助数组，记录 $T$ 的每个后缀 $T[i…](0\leq i \lt m)$ 的排名，$R[SA[i]]=i+1$</td>
+<td style="text-align:center">辅助数组，记录 $T$ 的每个后缀 $T[i…](0\leq i \lt m)$ 的排名</td>
 </tr>
 </tbody>
 </table>
-<p>设字符集为：$0, 1, 2, …, |\Sigma|-1$，将 $T=abcabcacab$ 映射为正整数（并在其后添加3个0作为哨兵字符以方便处理边界），相关符号的具体实例如下图：</p>
+<p>设字符集为：$0, 1, 2, …, |\Sigma|-1$，将 $T=cbacbacacb$ 映射为正整数（并在其后添加3个0作为哨兵字符以方便处理边界），相关符号的具体实例如下图：</p>
 <img src="/2022/07/28/suffixtrees/6.png" class="">
-<p>调用如下<em>GetSA(T)</em> 便可构造最终的 $SA$ 数组。</p>
-<p><em>Function GetSA(T):</em></p>
+<p>DC3 的算法流程如下：</p>
+<p><em>Function DC3(T):</em></p>
 <ul>
-<li><em>Step 1</em>：构造 $T_{12}$，并进行排序生成 $SA_{12}$、$R_{12}$，若 $R_{12}$中有重复元素（排名暂不能确定）则递归调用：$SA_{12}=GetSA(R_{12})$</li>
+<li><em>Step 1</em>：构造 $T_{12}$，并排序生成 $SA_{12}$、$R_{12}$，若 $R_{12}$中有重复元素（排名暂不能确定）则递归调用：$SA_{12}=DC3(R_{12})$</li>
 <li><em>Step 2</em>：根据 $SA_{12}$构造 $SA_0$</li>
 <li><em>Step 3</em>：将 $SA_{12}$ 和 $SA_0$ 合并生成后缀数组 $SA$，并返回 $SA$ 数组</li>
 </ul>
 <h2 id="Step-1">Step 1</h2>
 <p>首先构造 $T_{12}$：</p>
 <img src="/2022/07/28/suffixtrees/7.png" class="">
-<p>$T_{12}$ 中每个元素 $T_{12}[i]$ 代表的是以之为起点的后缀串 $T[T_{12}[i]…]$，例如 $T_{12}[0]=$ 代表的是后缀串 $T[x…]=asdsasa$，我们想要获得其排序后的数组 $SA_{12}$ 就需要对每个后缀串排序（共 $O(m)$ 个后缀串，每个串长度 $O(m)$ ），但即使使用线性时间复杂度的基数排序，时间复杂度也只能到达 $O(m^2)$。</p>
-<p><em>DC3</em> 的思想是在进行基数排序时只考虑后缀的前3个字符，如下：</p>
+<p>$T_{12}$ 中每个元素 $T_{12}[i]$ 代表的是以之为起点的后缀 $T[T_{12}[i]…]$，例如 $T_{12}[0]=1$ 代表的是后缀 $T[1…]=231231312$，要想获得其排序后的数组 $SA_{12}$ 就需要对每个后缀排序（共 $O(m)$ 个后缀，每个串长度 $O(m)$ ），但即使使用线性时间复杂度的基数排序，时间复杂度要 $O(m^2)$。</p>
+<p><em>DC3</em> 的思想是充分利用后缀的重复特性，分块进行基数排序，先只考虑后缀的前3个字符，如下：</p>
 <p><video src='8.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
 <p>倘若后缀的前3个字符互不相同，得到的 $R_{12}$ 中的值也互不相同，只根据前3个字符便可正确排序得到 $SA_{12}$ 。</p>
-<p>否则，我们需要再向后比较3个字符，其实每个后缀的这3个字符的顺序已经通过上述步骤计算出来了，例如**，</p>
-<p>所以，需要以 $R_{12}$ 作为 $T’$，递归执行，如下：</p>
+<p>不然，需要再向后比较3个字符，例如 $R_{12}[2]$ 和 $R_{12}[4]$ 的值都为3，因为其所代表的后缀的前3个字符分别为 $T[7…9]=213$ 和 $T[2…4]=132$，需要继续比较其后的3个字符，分别为 $T[10…12]=000$ 和 $T[5…7]=131$， 其实这两者的排名存在于 $R_{12}$ 中，分别为 $R_{12}[3]=1$ 和 $R_{12}[5]=2$。</p>
+<p>再进一步考虑，假如  $R_{12}[3]$ 和 $R_{12}[5]$ 也相同的话，则需要比较 $R_{12}[4]$ 和 $R_{12}[6]$，可以发现，这个过程就变成了在 $R_{12}$ 数组上比较，也就是求 $R_{12}$ 的后缀数组（这也解释了为什么构造 $T_{12}$ 时要让 $T_{12}=T_1+T_2$，因为这样保持了相对次序），于是，以 $R_{12}$ 作为 $T’$，递归下去，如下：</p>
 <p><video src='9.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
-<p>在递归了一层之后，$R’_{12}$ 中的值互不相同，接下来在本层进行 <em>Step 2</em>。</p>
+<p>在递归了一层之后，$R’_{12}$ 中的值互不相同，接下来在该层进行 <em>Step 2</em>。</p>
 <h2 id="Step-2">Step 2</h2>
-<p>经过 <em>Step 1</em>，递归至 $R’<em>{12}$ 中的值互不相同，得到了正确的 $SA’</em>{12}，R’<em>{12}$，下面讨论如何构造 $SA’</em>{0}$ 。</p>
+<p>经过 <em>Step 1</em>，递归至 $R’ _{12}$ 中的值互不相同，得到了的 $SA’ _{12}, R’ _{12}$，下面讨论如何构造 $SA’ _{0}$ 。</p>
 <img src="/2022/07/28/suffixtrees/10.png" class="">
-<p>我们可以采用同样的方式，对 $T’_0$ 所代表的所有后缀串 $T’[T’_0[i]…](0\leq i \lt m)$ 进行基数排序。可以发现，$T’[T’_0[i]+1…]$ 即 $T’[T’<em>1[i]…]$ 的次序是已知（且不重复）的（存在于 $R’</em>{12}$ 中），所以在排序时只需比较字符对 $(T’[T’<em>0[i]],  R’</em>{12}[i])$，如下：</p>
+<p>可以发现，$T’[T’_0[i]+1…]$ 即 $T’[T’_1[i]…]$ 的次序是已经存在于 $R’ _{12} $ 中，所以在对 $T’_0$ 所代表的所有后缀 $T’[T’_0[i]…]$进行排序时，只需比较字符对 $(T’[T’_0[i]],  R’ _{12}[i])$，如下：</p>
 <p><video src='11.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
 <h2 id="Step-3">Step 3</h2>
-<p>至此，在当前递归层，得到了 $SA_{0}$、$SA_{12}$、$R_{12}$，二者所代表的后缀各自有序，下面将其合并以构造出后缀数组  $SA’$。</p>
-<p>设 $a=SA’<em>0[i],\  b=SA’</em>{12}[j]$ ，$i,j$ 初始为 $0$，每次比较后缀 $T’[a…]$ 和 $T’[b…]$ 的大小，选择小的加入 $SA’$ 中，在进行比较时，逐个字符比较：</p>
+<p>至此，在当前递归层，得到了 $SA’ _{0}$、$SA’ _{12}$，二者所代表的后缀各自有序，下面将其合并以构造后缀数组  $SA’$。</p>
+<p>设 $a=SA’_0[i],\  b=SA’ _{12}[j]$ ，$i,j$ 初始为 $0$，比较后缀 $T’[a…]$ 和 $T’[b…]$ 的大小，选择小的加入 $SA’$ 中：</p>
 <ul>
 <li>如果 $T’[a]&lt;T’[b]$ 或者 $T’[a]&gt;T’[b]$， 即只根据第一个字符就可区分后缀的大小，则选择小的加入 $SA’$</li>
-<li>如果 $T’[a]==T’[b]$，需要继续比较后面的字符，但可以充分利用 $R’_{12}$ 避免一直比较下去：
+<li>如果 $T’[a]==T’[b]$，需要继续比较后面的字符，但可以充分利用 $R’_{12}$ ，避免一直比较下去：
 <ul>
-<li>如果 $b\  %\  3==1$，本应继续比较 $T’[a+1]$ 和 $T’[b+1]$， $T’[a+2]$ 和 $T’[b+2]$ 等，直到能区分二者大小，但因为 $(b+1)\  %\  3==2,\ (a+1)\  %\  3==1$，即 $a+1, b+1$ 都属于 $T’<em>{12}$， 后缀 $T’[a+1…]$ 和 $T’[b+1…]$ 的次序已存在于 $R’</em>{12}$ 中，只需比较各自对应的值即可。</li>
-<li>如果 $b\  %\  3==2$，因为 $(b+1)\  %\  3==0,\ (a+1)\  %\  3==1$，二者不在同一个序列里（$T’<em>0或T’</em>{12}$），不能使用上面的方法，继续比较  $T’[a+1]$ 和 $T’[b+1]$，如果依然相等，此时 $(b+2)\  %\  3==1,\ (a+2)\  %\  3==2$，即 $a+2,  b+2$ 都都属于 $T’<em>{12}$，后缀 $T’[a+2…]$ 和 $T’[b+2…]$ 的次序已存在于 $R’</em>{12}$ 中，比较各自对应的值即可。</li>
+<li>如果 $b\mod 3==1$，本应继续比较 $T’[a+1]$ 和 $T’[b+1]$， $T’[a+2]$ 和 $T’[b+2]$ 等，直到能区分二者大小，但因为 $(b+1)\mod 3==2,\ (a+1)\mod  3==1$，即 $a+1, b+1$ 都属于 $T’ _{12}$， 后缀 $T’[a+1…]$ 和 $T’[b+1…]$ 的次序已存在于 $R’ _{12}$ 中，只需比较各自对应的值即可。</li>
+<li>如果 $b\mod  3==2$，因为 $(b+1)\mod 3==0,\ (a+1)\mod 3==1$，二者不在同一个序列里（$T’ _0或T’ _{12}$），不能使用上面的方法，继续比较  $T’[a+1]$ 和 $T’[b+1]$，如果依然相等，此时 $(b+2)\mod 3==1,\ (a+2)\mod  3==2$，即 $a+2,  b+2$ 都都属于 $T’ _{12}$，后缀 $T’[a+2…]$ 和 $T’[b+2…]$ 的次序已存在于 $R’ _{12}$ 中，比较各自对应的值即可。</li>
 <li>若其中一个序列已全部加入了 $SA’$，则停止比较，直接将另一个序列加到 $SA’$ 中。</li>
 </ul>
 </li>
@@ -643,16 +657,16 @@
 <tr>
 <td style="text-align:center">$SA’$</td>
 <td style="text-align:center">3</td>
-<td style="text-align:center">6</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">2</td>
 <td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">6</td>
 </tr>
 </tbody>
 </table>
-<p>递归完成，将 $SA’$ 的值返回给上一层的 $SA_{12}$，但由于 $SA’$ 表示的是 $T’$ 即 $R_{12}$ 的后缀数组，需要根据 $T_{12}$ 恢复到正确的值，即 $SA_{12}[i]=T_{12}[SA’_{12}[i]]$。</p>
+<p>递归完成，将 $SA’$ 的值返回给上一层的 $SA_{12}$，但由于 $SA’$ 表示的是 $T’$ 即 $R_{12}$ 的后缀数组，需要根据 $T_{12}$ 恢复到正确的值，即 $SA_{12}[i]=T_{12}[SA’ _{12}[i]]$。</p>
 <table>
 <thead>
 <tr>
@@ -670,12 +684,12 @@
 <tr>
 <td style="text-align:center">$SA’$</td>
 <td style="text-align:center">3</td>
-<td style="text-align:center">6</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">2</td>
 <td style="text-align:center">5</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">6</td>
 </tr>
 <tr>
 <td style="text-align:center">$T_{12}$</td>
@@ -690,40 +704,81 @@
 <tr>
 <td style="text-align:center">$SA_{12}$</td>
 <td style="text-align:center">10</td>
-<td style="text-align:center">8</td>
-<td style="text-align:center">1</td>
-<td style="text-align:center">4</td>
-<td style="text-align:center">2</td>
-<td style="text-align:center">7</td>
 <td style="text-align:center">5</td>
+<td style="text-align:center">7</td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">4</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">8</td>
 </tr>
 </tbody>
 </table>
-<p>下面，在本层执行 <em>Step 2</em>, 根据 $SA_{12}$ 的值构造 $SA_0$：</p>
+<p>根据 $SA_{12}$ 的值构造 $SA_0$：</p>
 <p><video src='13.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
-<p>构造完成后，执行 <em>Step 3</em>，合并 $SA_0$ 和 $SA_{12}$：</p>
+<p>构造完成后，合并 $SA_0$ 和 $SA_{12}$：</p>
 <p><video src='14.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
 <p>至此，计算出了 $T$ 的后缀数组 $SA$:</p>
-
+<img src="/2022/07/28/suffixtrees/5.png" class="">
 <h1>LCP</h1>
-<p>给定后缀数组 $SA$，可在 $O(m)$ 时间内计算相邻后缀的LCP数组：$H[i]=LCP(SA[i], SA[i+1])$</p>
-<p>具体的算法流程如下：</p>
-<p>$LCP(SA[i], SA[j]) = RMQ_H(i, j - 1)$</p>
-<h1>后缀数组 -&gt; 后缀树</h1>
-<p>后缀数组与后缀树的联系：</p>
+<p>后缀数组与后缀树有着密切的联系：</p>
 <ul>
-<li>后缀数组可通过在后缀树上作有序DFS构建</li>
-<li>后缀数组中拥有公共前缀的两个后缀（串）在后缀树中有公共父节点</li>
-<li>后缀 $x$ 和后缀 $y$ 的最近公公祖先代表的字符串是 $x$ 和 $y$ 的最长公共前缀 $LCP(x, y)$</li>
+<li>后缀数组可通过在后缀树上作有序 DFS 构建</li>
+<li>后缀数组中拥有公共前缀的两个后缀在后缀树中有公共父结点</li>
+<li>后缀 $x$ 和后缀 $y$ 的最近公共祖先代表的字符串是 $x$ 和 $y$ 的最长公共前缀</li>
 </ul>
-<p><em>图 * 2</em></p>
-<h1>参考资料</h1>
+<p>对于<strong>问题 2</strong>，后缀树的匹配时间复杂度为：$O(n+z)$，后缀数组的匹配时间复杂度为：$O(n\log m + z)$，之所以会慢，是因为它相较于后缀树丢失了一些结构信息（例如最近公共祖先），而 LCP 可以恢复这些信息。</p>
+<p>首先作如下定义：</p>
 <ul>
 <li>
-<p>斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/03/Slides03.pdf">Suffix Trees</a>, <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/04/Slides04.pdf">Suffix Array</a></p>
+<p>对于字符串 $S_1$ 和 $S_2$，$LCP(S_1,S_2)$ 表示 $S_1$ 和 $S_2$ 的最长公共前缀</p>
 </li>
-<li></li>
+<li>
+<p>$H[i]=LCP(T[SA[i]…], T[SA[i+1]…])$，表示后缀数组 $SA$ 中两相邻后缀的最长公共前缀</p>
+</li>
+<li>
+<p>$R[SA[i]]=i$，$R[i]$ 表示后缀 $T[i…]$ 在 $SA$ 中的位置下标</p>
+</li>
 </ul>
+<p>Kasai 算法可在 $O(n)$ 计算出 $H$ 数组，该算法基于这样一个观察：对于 $SA$ 中两个相邻后缀 $T[SA[i]…]$ 和 $T[SA[i+1]…]$，设 $LCP(T[SA[i]…], T[SA[i+1]…])=h &gt;0$，那么对于后缀 $T[SA[i]+1…]$ 和 $T[SA[i+1]+1…]$，其最长公共前缀至少为 $h-1$ ，即：$LCP(T[SA[i]+1…], T[SA[i+1]+1…])&gt;=h-1$</p>
+<p>也就是说，如果计算出了 $T[0…]$ 和 $T[R[0+1]…]$ 两相邻后缀的最长公共前缀 $h_0$，那么对于 $T[1…]$ 和 $T[R[1+1]…]$ 的最长公共前缀至少是 $h_0-1$，因此只需要从第 $h_0$ 个字符开始比较即可。</p>
+<p>同样的，如果 $T[1…]$ 和 $T[R[1+1]…]$ 两相邻后缀的最长公共前缀 $h_1$，那么对于 $T[2…]$ 和 $T[R[2+1]…]$ 的最长公共前缀至少是 $h_1-1$，因此只需要从第 $h_1$ 个字符开始比较即可。</p>
+<p>Kasai 算法，便按照上述流程，从文本串 $T$ 的第一个后缀 $T[0…]$ 开始，依次向后计算，如下图：</p>
+<p><video src='15.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
+<p>而对 $SA$ 的任意两个后缀的最长公共前缀 $LCP(SA[i], SA[j]) = RMQ_H(i, j - 1)$ ，使用<a href="/2021/01/29/rmq2/" title="Fischer-Heun">Fischer-Heun</a>算法，时间复杂度为：$&lt;O(m), O(1)&gt;$。</p>
+<p>有了 $LCP$ ，对于<strong>问题 2</strong>，可以模拟在后缀树上进行查找：</p>
+<ul>
+<li>对后缀树的叶子结点进行二分查找，记录所匹配到的最深的子树</li>
+<li>二分向子树方向收缩</li>
+<li><strong>利用 $LCP$ 追踪子树信息</strong></li>
+</ul>
+<p>可将后缀数组的匹配时间复杂度降低到 $O(n+\log m+z)$。</p>
+<p>对于<strong>问题 3</strong>，遍历 $H$ 数组，求最大值。</p>
+<h1>后缀数组 -&gt; 后缀树</h1>
+<p>前文提到可以通过在后缀树上进行有序 DFS 来构造后缀数组，同样地，也可以根据后缀数组 $SA$ 和 $H$ 数组来构建后缀树，可以发现：</p>
+<ul>
+<li>$H$ 数组中，所有值为 $0$ 的点代表的是后缀树中的分支结点</li>
+<li>按照 $0$ 的位置划分 $H$ 数组</li>
+<li>每个子数组内部，所有值为 $1$ 的点代表的是子树中的分支结点</li>
+<li>继续递归划分</li>
+</ul>
+<img src="/2022/07/28/suffixtrees/16.gif" class="">
+<p>实际上，后缀树是 $H$ 数组的<a href="/2021/01/29/rmq2/" title="笛卡尔树">笛卡尔树</a>的变种，可以通过如下方式构建：</p>
+<ul>
+<li>构造 $H$ 数组的笛卡尔树</li>
+<li>如果两个结点相连且所代表的 $H$ 值相同，将其合并</li>
+<li>对合并后的树进行 DFS，根据后缀数组 $SA$ 依次添加叶子结点，并向结点添加对应的后缀标签，生成最终的后缀树</li>
+</ul>
+<p><video src='17.mp4' type='video/mp4' controls='controls' width='100%' height='100%' autoplay="autoplay"></video></p>
+<h1>参考资料</h1>
+<ul>
+<li>斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a>: <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/03/Slides03.pdf">Suffix Trees</a>, <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/04/Slides04.pdf">Suffix Array</a></li>
+<li>DC3原论文：Linear Work Suffix Array Construction</li>
+<li>LCP原论文：Linear-Time Longest-Common-Prefix Computation in Suffix Arrays and Its Applications</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/vikasawadhiya/DC3-Algorithm/blob/main/DC3AlgorithmTutorial.pdf">DC3资源1</a></li>
+<li><a target="_blank" rel="noopener" href="https://codeforces.com/blog/entry/12796">LCP资源1</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/57748988/kasai-algorithm-for-constructing-lcp-array-practical-example/63104083#63104083">LCP资源2</a></li>
+</ul>
+<p><strong><a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/SuffixArray">下载</a>代码.</strong></p>
 
       
     </div>
@@ -782,7 +837,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-07-28 22:05:18" itemprop="dateModified" datetime="2022-07-28T22:05:18+08:00">2022-07-28</time>
+        <time title="修改时间：2022-10-29 19:40:14" itemprop="dateModified" datetime="2022-10-29T19:40:14+08:00">2022-10-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -804,10 +859,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Slides02.pdf">Aho-Corasick Automata</a></p>
-</blockquote>
-<h1>问题描述</h1>
+          <h1>问题描述</h1>
 <blockquote>
 <p>给定一个字符串 $T$，找出 $k$ 个非空字符串 $P_1, P_2, …, P_k$ 在 $T$ 中出现的所有位置。</p>
 </blockquote>
@@ -865,10 +917,10 @@
 <p>通过对trie进行广度优先搜索来构造 $wa$ 的失配指针：</p>
 <ul>
 <li>
-<p>如果当前节点为根结点，则它没有失配指针</p>
+<p>如果当前结点为根结点，则它没有失配指针</p>
 </li>
 <li>
-<p>如果当前节点为根结点的子结点，则它的失配指针指向根结点</p>
+<p>如果当前结点为根结点的子结点，则它的失配指针指向根结点</p>
 </li>
 <li>
 <p>否则，设该结点为 $wa$，$x$ 为 $w$ 的失配指针指向的结点：</p>
@@ -902,7 +954,7 @@
 <li>从Trie的根结点开始</li>
 <li>对于 $T$ 中的每一个字符 $c$：
 <ul>
-<li>如果当前节点的子结点没有 $c$:
+<li>如果当前结点的子结点没有 $c$:
 <ul>
 <li>如果当前位于根结点，结束当前循环</li>
 <li>否则，移动到失配指针指向的结点</li>
@@ -910,14 +962,18 @@
 </li>
 <li>如果当前结点的子结点有 $c$，移动到该结点</li>
 <li>如果当前结点对应一个模式串，输出该模式串</li>
-<li>输出当前节点的输出指针链上的所有模式串</li>
+<li>输出当前结点的输出指针链上的所有模式串</li>
 </ul>
 </li>
 </ul>
 <p>具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"><span class="keyword">import</span> queue</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, pattern=None</span>):</span></span><br><span class="line">        self.children = defaultdict(TrieNode)</span><br><span class="line">        self.pattern = <span class="literal">None</span></span><br><span class="line">        self.suffix_link = <span class="literal">None</span></span><br><span class="line">        self.output_link = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ACAutomata</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, patterns</span>):</span></span><br><span class="line">        self.patterns = patterns</span><br><span class="line">        self.root = TrieNode()</span><br><span class="line">        self.build()</span><br><span class="line">        self.bfs()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">for</span> pattern <span class="keyword">in</span> self.patterns:</span><br><span class="line">            u = self.root</span><br><span class="line">            <span class="keyword">for</span> c <span class="keyword">in</span> pattern:</span><br><span class="line">                u = u.children[c]</span><br><span class="line">            u.pattern = pattern</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">bfs</span>(<span class="params">self</span>):</span></span><br><span class="line">        q = queue.Queue()</span><br><span class="line">        q.put(self.root)</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> q.empty():</span><br><span class="line">            u = q.get()</span><br><span class="line">            <span class="comment"># Build suffix link.</span></span><br><span class="line">            <span class="keyword">for</span> a, v <span class="keyword">in</span> u.children.items():</span><br><span class="line">                <span class="keyword">if</span> u == self.root:</span><br><span class="line">                    v.suffix_link = u</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    x = u.suffix_link</span><br><span class="line">                    <span class="keyword">while</span> v.suffix_link <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                        <span class="keyword">if</span> a <span class="keyword">in</span> x.children.keys():</span><br><span class="line">                            v.suffix_link = x.children[a]</span><br><span class="line">                        <span class="keyword">elif</span> x == self.root:</span><br><span class="line">                            v.suffix_link = x</span><br><span class="line">                        <span class="keyword">else</span>:</span><br><span class="line">                            x = x.suffix_link</span><br><span class="line"></span><br><span class="line">                <span class="comment"># Build output link.</span></span><br><span class="line">                <span class="keyword">if</span> v.suffix_link.pattern <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                    v.output_link = v.suffix_link</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    v.output_link = v.suffix_link.output_link</span><br><span class="line"></span><br><span class="line">                q.put(v)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">match</span>(<span class="params">self, text</span>):</span></span><br><span class="line">        u = self.root</span><br><span class="line">        answer = defaultdict(list)</span><br><span class="line">        j = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> text:</span><br><span class="line">            <span class="keyword">while</span> <span class="keyword">not</span> c <span class="keyword">in</span> u.children.keys():</span><br><span class="line">                u = u.suffix_link</span><br><span class="line">                <span class="keyword">if</span> u == self.root <span class="keyword">or</span> u <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">if</span> u <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> c <span class="keyword">in</span> u.children.keys():</span><br><span class="line">                u = u.children[c]</span><br><span class="line">                j += <span class="number">1</span></span><br><span class="line">            v = u</span><br><span class="line">            <span class="keyword">while</span> v <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                <span class="keyword">if</span> v.pattern <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                    answer[v.pattern].append(j - len(v.pattern))</span><br><span class="line">                v = v.output_link</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> answer</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    patterns = [<span class="string">&quot;ab&quot;</span>, <span class="string">&quot;about&quot;</span>, <span class="string">&quot;at&quot;</span>, <span class="string">&quot;ate&quot;</span>, <span class="string">&quot;be&quot;</span>, <span class="string">&quot;bed&quot;</span>, <span class="string">&quot;edge&quot;</span>, <span class="string">&quot;get&quot;</span>]</span><br><span class="line">    text = <span class="string">&quot;abedget&quot;</span></span><br><span class="line">    ac_automata = ACAutomata(patterns)</span><br><span class="line">    print(ac_automata.match(text))</span><br></pre></td></tr></table></figure>
 <p>至此，得到一个时间复杂度为$&lt;O(n), O(m+z)&gt;$的字符串匹配算法（该算法输出敏感，其中 $z$ 为匹配成功的个数），适合模式串固定，文本串变化的这类问题。</p>
-<p>那么对于文本串固定，模式串变化的问题可使用**<a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/AC-Automata">后缀树（Suffix Trees)</a>**算法。</p>
+<p>那么对于文本串固定，模式串变化的问题可使用<a href="/2022/07/28/suffixtrees/" title="后缀数组">后缀数组</a>算法。</p>
+<h1>参考资料</h1>
+<ul>
+<li>斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a>: <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/02/Slides02.pdf">Aho-Corasick Automata</a></li>
+</ul>
 <p><strong><a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/AC-Automata">下载</a>代码.</strong></p>
 
       
@@ -977,7 +1033,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2021-11-28 21:10:23" itemprop="dateModified" datetime="2021-11-28T21:10:23+08:00">2021-11-28</time>
+        <time title="修改时间：2022-10-29 12:23:28" itemprop="dateModified" datetime="2022-10-29T12:23:28+08:00">2022-10-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -999,10 +1055,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/01/Slides01.pdf">Range Minimum Queries, Part Two</a></p>
-</blockquote>
-<h1>问题回顾</h1>
+          <h1>问题回顾</h1>
 <p>在 <a href="/2020/10/29/rmq/" title="Part One">Part One</a>中，基于分块算法，建立了这样一个算法框架：</p>
 <ul>
 <li>块间采用时间复杂度为 $&lt;p_1(n),q_1(n)&gt;$ 的 $RMQ$ 算法</li>
@@ -1073,31 +1126,31 @@
 </ul>
 <p>具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CartesianTreeNode</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, index</span>):</span></span><br><span class="line">        self.index = index</span><br><span class="line">        self.lchild = <span class="literal">None</span></span><br><span class="line">        self.rchild = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CartesianTree</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.root = self.build(<span class="number">0</span>, len(a))</span><br><span class="line">        self.traverse(self.root)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build</span>(<span class="params">self, l, r</span>):</span></span><br><span class="line">        <span class="keyword">if</span> l == r:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        index = self.a[l:r].index(min(self.a[l:r])) + l</span><br><span class="line">        node = CartesianTreeNode(index)</span><br><span class="line">        node.lchild = self.build(l, index)</span><br><span class="line">        node.rchild = self.build(index + <span class="number">1</span>, r)</span><br><span class="line">        <span class="keyword">return</span> node</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">traverse</span>(<span class="params">self, node</span>):</span></span><br><span class="line">        <span class="keyword">if</span> node.lchild <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.traverse(node.lchild)</span><br><span class="line">        print(node.index)</span><br><span class="line">        <span class="keyword">if</span> node.rchild <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.traverse(node.rchild)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    cartesian_tree = CartesianTree(a)</span><br></pre></td></tr></table></figure>
-<p>一种更高效的方法是线性增加节点，即先构建数组第一个数的笛卡尔树，在此基础上增加第二个数，并调整笛卡尔树，然后再增加第三个数，以此类推。</p>
+<p>一种更高效的方法是线性增加结点，即先构建数组第一个数的笛卡尔树，在此基础上增加第二个数，并调整笛卡尔树，然后再增加第三个数，以此类推。</p>
 <p>考虑以下几点性质：</p>
 <ul>
-<li>对于一个新增加的节点，它不可能成为任何节点的左孩子，只能是新的根结点，或者某节点的右孩子</li>
-<li>根据上一个性质，每次新节点的增加，并不会改变任何已有节点的左子树，只会更改其的父节点或右子树</li>
-<li>笛卡尔树满足小根堆的性质，即根节点的值小于左右孩子</li>
+<li>对于一个新增加的结点，它不可能成为任何结点的左孩子，只能是新的根结点，或者某结点的右孩子</li>
+<li>根据上一个性质，每次新结点的增加，并不会改变任何已有结点的左子树，只会更改其的父结点或右子树</li>
+<li>笛卡尔树满足小根堆的性质，即根结点的值小于左右孩子</li>
 </ul>
-<p>据此，便可以提出一个基于栈的算法来构建笛卡尔树，在加入一个新节点时：</p>
+<p>据此，便可以提出一个基于栈的算法来构建笛卡尔树，在加入一个新结点时：</p>
 <font color=#37A59A>
 <ol>
-<li>当栈顶节点值大于新节点值时执行出栈操作，直至栈顶节点值小于新节点值或栈空</li>
-<li>把新节点的左孩子置为最后一个出栈的节点（如果没有节点出栈，置空）</li>
-<li>把新节点置为栈顶节点的右孩子（如果栈空，新节点成为根节点）</li>
-<li>将新节点入栈</li>
+<li>当栈顶结点值大于新结点值时执行出栈操作，直至栈顶结点值小于新结点值或栈空</li>
+<li>把新结点的左孩子置为最后一个出栈的结点（如果没有结点出栈，置空）</li>
+<li>把新结点置为栈顶结点的右孩子（如果栈空，新结点成为根结点）</li>
+<li>将新结点入栈</li>
 </ol>
 </font>
-<p>对该算法的正确性进行一些解释。对于一个递增的序列，只会执行 3、4，即不断的向右增加节点且入栈，正确性显然，栈始终保留一个递增的节点序列，如下图：</p>
+<p>对该算法的正确性进行一些解释。对于一个递增的序列，只会执行 3、4，即不断的向右增加结点且入栈，正确性显然，栈始终保留一个递增的结点序列，如下图：</p>
 <img src="/2021/01/29/rmq2/Fig7.gif" class="">
-<p>如果此时加入的新节点比栈顶节点（即上次加入的节点）值小，意味着栈顶节点要成为新节点的左子树部分，需要找到合适的位置来插入新节点，所以执行出栈操作，直到栈顶节点值小于新节点值或栈空为止，然后将新节点左孩子置为最后一个出栈的节点（也即所有出栈节点的祖先节点），并将新节点置为当前栈顶节点的右孩子（如果栈空，意味着新节点是当前最小节点，直接作为根结点），最后新节点入栈，栈依旧保留一个递增的节点序列。具体流程如下图：</p>
+<p>如果此时加入的新结点比栈顶结点（即上次加入的结点）值小，意味着栈顶结点要成为新结点的左子树部分，需要找到合适的位置来插入新结点，所以执行出栈操作，直到栈顶结点值小于新结点值或栈空为止，然后将新结点左孩子置为最后一个出栈的结点（也即所有出栈结点的祖先结点），并将新结点置为当前栈顶结点的右孩子（如果栈空，意味着新结点是当前最小结点，直接作为根结点），最后新结点入栈，栈依旧保留一个递增的结点序列。具体流程如下图：</p>
 <img src="/2021/01/29/rmq2/Fig8.gif" class="">
-<p>在该算法中，栈的作用是保留一个后续可能会变动的节点序列，在步骤1中，之所以将节点出栈，是因为这些节点会在步骤2中成为新节点的左子树部分，在之后的操作中，不会再变动。</p>
+<p>在该算法中，栈的作用是保留一个后续可能会变动的结点序列，在步骤1中，之所以将结点出栈，是因为这些结点会在步骤2中成为新结点的左子树部分，在之后的操作中，不会再变动。</p>
 <p>算法围绕栈来操作，栈操作最多 $2n$ 次：</p>
 <ul>
-<li>每个节点都入栈1次</li>
-<li>每个节点最多出栈1次</li>
+<li>每个结点都入栈1次</li>
+<li>每个结点最多出栈1次</li>
 </ul>
 <p>其时间复杂度为：$O(n)$。</p>
 <p>具体代码如下：</p>
@@ -1137,6 +1190,10 @@ $$<br>
 <p>最终得到了一个 $&lt;O(n), O(1)&gt;$的算法，具体代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt, log, inf</span><br><span class="line"><span class="keyword">from</span> cartesian_stack <span class="keyword">import</span> CartesianTreeNumber</span><br><span class="line"><span class="keyword">from</span> st <span class="keyword">import</span> St</span><br><span class="line"><span class="keyword">from</span> dp2 <span class="keyword">import</span> Dp</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Combine4</span>(<span class="params">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, a</span>):</span></span><br><span class="line">        self.a = a</span><br><span class="line">        self.n = len(a)</span><br><span class="line">        self.len_b = max(<span class="number">1</span>, int(log(sqrt(self.n))/log(<span class="number">4</span>)))</span><br><span class="line">        self.hash = [<span class="number">-1</span> <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">4</span> ** self.len_b)]</span><br><span class="line">        self.cnt_b = (self.n - <span class="number">1</span>) // self.len_b + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">preprocess</span>(<span class="params">self</span>):</span></span><br><span class="line">        f = [inf <span class="keyword">for</span> _ <span class="keyword">in</span> range(self.cnt_b)] </span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.cnt_b):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i * self.len_b, i * self.len_b + self.len_b):</span><br><span class="line">                <span class="keyword">if</span> j &gt;= self.n:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                f[i] = min(f[i], self.a[j])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># ST between blocks.</span></span><br><span class="line">        self.st = St(f)</span><br><span class="line">        self.st.preprocess()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">rmq</span>(<span class="params">self, i, j</span>):</span></span><br><span class="line">        ans = inf</span><br><span class="line">        ith = i // self.len_b </span><br><span class="line">        jth = j // self.len_b</span><br><span class="line"></span><br><span class="line">        i -= ith * self.len_b</span><br><span class="line">        j -= jth * self.len_b</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">find_or_set</span>(<span class="params">ith, i, j</span>):</span></span><br><span class="line">            a = self.a[ith * self.len_b:(ith + <span class="number">1</span>) * self.len_b]</span><br><span class="line">            t = CartesianTreeNumber(a).num</span><br><span class="line">            <span class="keyword">if</span> self.hash[t] == <span class="number">-1</span>:</span><br><span class="line">                dp = Dp(a)</span><br><span class="line">                dp.preprocess()</span><br><span class="line">                self.hash[t] = dp</span><br><span class="line">            <span class="keyword">return</span> a[self.hash[t].rmq(i, j)]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith == jth:</span><br><span class="line">            ans = min(ans, find_or_set(ith, i, j))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ans = min(ans, find_or_set(ith, i, self.len_b - <span class="number">1</span>)) </span><br><span class="line">            ans = min(ans, find_or_set(jth, <span class="number">0</span>, j)) </span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ith + <span class="number">1</span> &lt;= jth - <span class="number">1</span>:</span><br><span class="line">            ans = min(ans, self.st.rmq(ith + <span class="number">1</span>, jth - <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>: </span><br><span class="line">    a = [<span class="number">3</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">4</span>]</span><br><span class="line">    combine4 = Combine4(a)</span><br><span class="line">    combine4.preprocess()</span><br><span class="line">    print(combine4.rmq(<span class="number">1</span>, <span class="number">13</span>))</span><br></pre></td></tr></table></figure>
 <p>由于该算法的常数较大，在实际应用中，组合1的效率更高一点。</p>
+<h1>参考资料</h1>
+<ul>
+<li>斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a>: <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/01/Slides01.pdf">Range Minimum Queries, Part Two</a></li>
+</ul>
 <p><strong><a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/RMQ">下载</a>代码.</strong></p>
 
       
@@ -1196,7 +1253,7 @@ $$<br>
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-07-04 15:44:44" itemprop="dateModified" datetime="2022-07-04T15:44:44+08:00">2022-07-04</time>
+        <time title="修改时间：2022-10-29 19:53:09" itemprop="dateModified" datetime="2022-10-29T19:53:09+08:00">2022-10-29</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1218,10 +1275,7 @@ $$<br>
     
     
     <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>本文参考自斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a> 的 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/00/Slides00.pdf">Range Minimum Queries, Part One</a></p>
-</blockquote>
-<h1>问题描述</h1>
+          <h1>问题描述</h1>
 <blockquote>
 <p>给定长度为 $n$ 的数组A，以及两个下标 $i,j(i\le j) $, 求出 $ A[i], A[i + 1], … , A[j]$ 的最小值。</p>
 </blockquote>
@@ -1559,8 +1613,12 @@ $$<br>
 <li>组合3：$&lt;O(n), O(log(log(n)))&gt;$</li>
 </ul>
 <p>另外，稀疏表再此和组合2组合，可以继续减少预处理的时间复杂度为 $O(n\cdot log(log(log(n)))$，查询时间复杂度不变；稀疏表再次和组合3组合，可以继续减少查询的时间复杂度为 $O(log(log(log(n)))$，预处理时间复杂度不变。组合可以一直进行下去。</p>
+<h1>参考资料</h1>
+<ul>
+<li>斯坦福大学数据结构课程 <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/">CS166</a>: <a target="_blank" rel="noopener" href="http://web.stanford.edu/class/archive/cs/cs166/cs166.1166/lectures/00/Slides00.pdf">Range Minimum Queries, Part One</a></li>
+</ul>
 <p><strong><a target="_blank" rel="noopener" href="https://github.com/Ackeraa/DataStructure/tree/master/RMQ">下载</a>代码.</strong></p>
-<p><strong>进入<a href="/2021/01/29/rmq2/" title="Part Two">Part Two</a></strong>.</p>
+<p><strong>阅读<a href="/2021/01/29/rmq2/" title="Part Two">Part Two</a></strong>.</p>
 
       
     </div>
